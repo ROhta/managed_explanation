@@ -1,5 +1,14 @@
 {
-  "private": true,
+  "name": "managed_explanation",
+  "version": "0.0.1",
+  "author": "ROhta",
+  "description": "アーキテクチャ説明",
+  "private": false,
+  "license": "GPL-3.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ROhta/managed_explanation"
+  },
   "scripts": {
     "build": "slidev build",
     "dev": "slidev --open",
@@ -9,6 +18,5 @@
     "@slidev/cli": "^0.27.8",
     "@slidev/theme-default": "*",
     "@slidev/theme-seriph": "*"
-  },
-  "name": "managed_explanation"
+  }
 }
