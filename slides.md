@@ -1,6 +1,6 @@
 ---
 # try also 'default' to start simple
-theme: seriph
+theme: bricks
 # random image from a curated Unsplash collection by Anthony
 # like them? see https://unsplash.com/collections/94734566/slidev
 background: https://source.unsplash.com/collection/94734566/1920x1080
@@ -69,18 +69,6 @@ You can have `style` tag in markdown to override the style for the current page.
 Learn more: https://sli.dev/guide/syntax#embedded-styles
 -->
 
-<style>
-h1 {
-  background-color: #2B90B6;
-  background-image: linear-gradient(45deg, #4EC5D4 10%, #146b8c 20%);
-  background-size: 100%;
-  -webkit-background-clip: text;
-  -moz-background-clip: text;
-  -webkit-text-fill-color: transparent; 
-  -moz-text-fill-color: transparent;
-}
-</style>
-
 ---
 
 # Navigation
@@ -105,8 +93,9 @@ Hover on the bottom-left corner to see the navigation's controls panel, [learn m
 <p v-after class="absolute bottom-23 left-45 opacity-30 transform -rotate-10">Here!</p>
 
 ---
+
 layout: image-right
-image: https://source.unsplash.com/collection/94734566/1920x1080
+image: <https://source.unsplash.com/collection/94734566/1920x1080>
 ---
 
 # Code
@@ -123,7 +112,7 @@ interface User {
 
 function updateUser(id: number, update: User) {
   const user = getUser(id)
-  const newUser = {...user, ...update}  
+  const newUser = {...user, ...update}
   saveUser(id, newUser)
 }
 ```
@@ -176,8 +165,8 @@ Check out [the guides](https://sli.dev/builtin/components.html) for more.
 </div>
 </div>
 
-
 ---
+
 class: px-20
 ---
 
@@ -209,6 +198,7 @@ Read more about [How to use a theme](https://sli.dev/themes/use.html) and
 check out the [Awesome Themes Gallery](https://sli.dev/themes/gallery.html).
 
 ---
+
 preload: false
 ---
 
@@ -250,7 +240,7 @@ Animations are powered by [@vueuse/motion](https://motion.vueuse.org/).
     />
   </div>
 
-  <div 
+  <div
     class="text-5xl absolute top-14 left-40 text-[#2B90B6] -z-1"
     v-motion
     :initial="{ x: -80, opacity: 0}"
@@ -337,8 +327,8 @@ C -->|Two| E[Result 2]
 
 [Learn More](https://sli.dev/guide/syntax.html#diagrams)
 
-
 ---
+
 layout: center
 class: text-center
 ---
