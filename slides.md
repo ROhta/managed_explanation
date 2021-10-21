@@ -83,9 +83,63 @@ drawings:
 </style>
 ---
 
+# 使用技術（Dockerfile以上）
+
+|     |     |
+| --- | --- |
+| <kbd>frontend</kbd> | <img src="/typescript.svg" width="100" class="inline-block p-4"><img src="/next.js.svg" width="150" class="inline-block p-4"> |
+| <kbd>backend</kbd> | <img src="/rust.svg" width="100" class="inline-block p-4"><img src="/actixweb.jpg" width="200" class="inline-block p-4"> |
+| <kbd>CI/CD</kbd> | <img src="/github_actions.png" width="100"> |
+| <kbd>認証・認可</kbd> | <img src="/auth0.png" width="150"> |
+
+---
+
+# 使用技術（Dockerfile以上）
+
+|     |     |
+| --- | --- |
+| <kbd>frontend</kbd> | SSRに対応 |
+| <kbd>backend</kbd> | DDD指向・オニオンアーキテクチャで実装 |
+| <kbd>CI/CD</kbd> | [aws謹製のactions](https://github.com/aws-actions)で実装 |
+| <kbd>認証・認可</kbd> | [Organizations](https://auth0.com/docs/organizations)機能を使用（予定） |
+
+---
+layout: two-cols
+---
+
+# 使用技術（Dockerfile未満）
+
+## ほぼAWS
+
+- ECS on Fargate
+- ECR
+- App Mesh
+  - mTLS有効化
+- Cloud Map
+- Cloudwatch Logs
+- Firelens
+- BudgetsをChatbotでSlackに通知
+::right::
+- IAM・KMSをちゃんと管理
+- Config
+- Organizations
+- WAF
+- Shield
+- Firewall Manager
+- Guard DUty
+- Macie
+
+---
+layout: image
+image: /real_resources.svg
+class: max-h-full max-w-full w-auto
+---
+
 ## 実体リソース
 
-<img src="/real_resources.svg" border="rounded" width="600">
+ああ
+
+<!-- <img src="/real_resources.svg" border="rounded" width="600"> -->
 
 ---
 
@@ -111,13 +165,6 @@ drawings:
 Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/navigation.html)
 
 ### Keyboard Shortcuts
-
-|     |     |
-| --- | --- |
-| <kbd>right</kbd> / <kbd>space</kbd>| next animation or slide |
-| <kbd>left</kbd>  / <kbd>shift</kbd><kbd>space</kbd> | previous animation or slide |
-| <kbd>up</kbd> | previous slide |
-| <kbd>down</kbd> | next slide |
 
 <!-- https://sli.dev/guide/animations.html#click-animations -->
 <img
