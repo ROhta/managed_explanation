@@ -1,74 +1,109 @@
 ---
-# try also 'default' to start simple
-theme: bricks
-# random image from a curated Unsplash collection by Anthony
-# like them? see https://unsplash.com/collections/94734566/slidev
+theme: flayyer
 background: https://source.unsplash.com/collection/94734566/1920x1080
-# apply any windi css classes to the current slide
 class: 'text-center'
-# https://sli.dev/custom/highlighters.html
 highlighter: shiki
-# show line numbers in code blocks
-lineNumbers: false
-# some information about the slides, markdown enabled
+lineNumbers: true
 info: |
-  ## Slidev Starter Template
-  Presentation slides for developers.
-
-  Learn more at [Sli.dev](https://sli.dev)
-# persist drawings in exports and build
+  ## 開発説明
 drawings:
-  persist: false
+  persist: true
 ---
 
 # Welcome to Slidev
 
-Presentation slides for developers
-
-<div class="pt-12">
-  <span @click="$slidev.nav.next" class="px-2 py-1 rounded cursor-pointer" hover="bg-white bg-opacity-10">
-    Press Space for next page <carbon:arrow-right class="inline"/>
-  </span>
-</div>
-
-<div class="abs-br m-6 flex gap-2">
-  <button @click="$slidev.nav.openInEditor()" title="Open in Editor" class="text-xl icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon:edit />
-  </button>
-  <a href="https://github.com/slidevjs/slidev" target="_blank" alt="GitHub"
-    class="text-xl icon-btn opacity-50 !border-none !hover:text-white">
-    <carbon-logo-github />
-  </a>
-</div>
-
 <!--
-The last comment block of each slide will be treated as slide notes. It will be visible and editable in Presenter Mode along with the slide. [Read more in the docs](https://sli.dev/guide/syntax.html#notes)
+コメント書く
 -->
+---
+
+#
+
+<div class="titles"><div class="titlecontent">
+
+ <p class="center">EPISODE IV<br />A NEW HOPE FOR CSS3</p>
+
+ <p>It is a period of vendor war.</p>
+
+ <p>This is a demonstration of Star Wars-style scrolling 3D titles in CSS3. It possibly has no practical purpose whatsoever but it looks great and you can impress your friends.</p>
+
+ <p>Before movie-buffs start ranting, I realize Star Wars wasn't the first to use crawling 3D titles, but few of you will remember the Flash Gordon series or the 1936 adaption of HG Wells' "Things to Come".</p>
+
+ <p>Also, by mentioning "Star Wars", everyone will understand what I mean. And I'll receive several thousand more visits.</p>
+
+ <p>The scrolling titles work well in Chrome, Safari and Firefox. Opera doesn't implement 3D transforms yet, but the text will scroll. IE users receive a blank page. A shame, but IE10 should support it.</p>
+
+ <p>So how does it work? Well, it's fairly simple. We have an outer absolute DIV (#titles) which is rotated along the X-axis using perspective to give the impression of depth. The same DIV also has an :after psuedo-element which applies a linear gradient so the text appears to fade out.</p>
+
+ <p>Inside, we have another absolutely-positioned DIV which contains the text (#titlecontent). The top is set to 100% to ensure it starts off-screen then uses CSS3 animation to move it upward over time. No JavaScript is required.</p>
+
+ <p>You will probably need to adjust the movement amount and timing depending on the quantity of text you want to show. The 3D depth can also be tweaked in the</p>
+
+ <p>All the code is contained in this single HTML file</p>
+
+ <p class="center">View the source, Luke!</p>
+
+ <p>Sorry. Couldn't resist it.</p>
+
+ <p>You're welcome to use this demonstration code in your own sites. Please link back to the original article at:</p>
+
+ <p class="center"><a href="http://www.sitepoint.com/css3-starwars-scrolling-text/">sitepoint.com/<br />css3-starwars-scrolling-text/</a></p>
+
+ <p>and give me a shout on Twitter <a href="http://twitter.com/craigbuckler">@craigbuckler</a> &ndash; I'd love to see how you use and abuse it!</p>
+
+ <p>Finally, Han shot first and the original, unadulterated movies remain the best. Stop fiddling with them, George!</p>
+
+</div></div>
+
+<style>
+ .titles {
+    position: absolute;
+    width: 18em;
+    height: 50em;
+    bottom: 0;
+    left: 50%;
+    margin-left: -9em;
+    font-size: 350%;
+    font-weight: bold;
+    text-align: justify;
+    overflow: hidden;
+    transform-origin: 50% 100%;
+    transform: perspective(300px) rotateX(25deg);
+ }
+ .titles:after {
+    position: absolute;
+    content: ' ';
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 60%;
+    background-image: linear-gradient(top, rgba(0,0,0,1) 0%, transparent 100%);
+    pointer-events: none;
+ }
+</style>
+---
+
+## 実体リソース
+
+<img src="/real_resources.svg" border="rounded" width="600">
 
 ---
 
-# What is Slidev?
+## 仮想リソース
 
-Slidev is a slides maker and presenter designed for developers, consist of the following features
+<img src="/virtual_resources.svg" border="rounded" width="600">
 
-- 📝 **Text-based** - focus on the content with Markdown, and then style them later
-- 🎨 **Themable** - theme can be shared and used with npm packages
-- 🧑‍💻 **Developer Friendly** - code highlighting, live coding with autocompletion
-- 🤹 **Interactive** - embedding Vue components to enhance your expressions
-- 🎥 **Recording** - built-in recording and camera view
-- 📤 **Portable** - export into PDF, PNGs, or even a hostable SPA
-- 🛠 **Hackable** - anything possible on a webpage
+---
 
-<br>
-<br>
+## セキュリティ対策も追加
 
-Read more about [Why Slidev?](https://sli.dev/guide/why)
+<img src="/add_security_resources.svg" border="rounded" width="600">
 
-<!--
-You can have `style` tag in markdown to override the style for the current page.
-Learn more: https://sli.dev/guide/syntax#embedded-styles
--->
+---
 
+## dev環境のみの構成
+
+<img src="/dev_environment.svg" border="rounded" width="500">
 ---
 
 # Navigation
@@ -165,9 +200,6 @@ Check out [the guides](https://sli.dev/builtin/components.html) for more.
 </div>
 </div>
 
----
-
-class: px-20
 ---
 
 # Themes
