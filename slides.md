@@ -87,10 +87,10 @@ drawings:
 
 |     |     |
 | --- | --- |
-| <kbd>frontend</kbd> | <img src="/typescript.svg" width="100" class="inline-block p-4"><img src="/next.js.svg" width="150" class="inline-block p-4"> |
-| <kbd>backend</kbd> | <img src="/rust.svg" width="100" class="inline-block p-4"><img src="/actixweb.jpg" width="200" class="inline-block p-4"> |
-| <kbd>CI/CD</kbd> | <img src="/github_actions.png" width="100"> |
-| <kbd>認証・認可</kbd> | <img src="/auth0.png" width="150"> |
+| <kbd>frontend</kbd> | <img src="/typescript.svg" width="80" class="inline-block p-4"><img src="/react.svg" width="150" class="inline-block p-4"><img src="/next.js.svg" width="100" class="inline-block p-4"><img src="/material_ui.png" width="150" class="inline-block p-4"> |
+| <kbd>backend</kbd> | <img src="/rust.svg" width="80" class="inline-block p-4"><img src="/actixweb.jpg" width="150" class="inline-block p-4"> |
+| <kbd>CI/CD</kbd> | <img src="/github_actions.png" width="80"> |
+| <kbd>認証・認可</kbd> | <img src="/auth0.png" width="100"> |
 
 ---
 
