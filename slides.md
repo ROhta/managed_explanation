@@ -87,7 +87,7 @@ drawings:
 
 |     |     |
 | --- | --- |
-| <kbd>frontend</kbd> | <img src="/typescript.svg" width="80" class="inline-block p-4"><img src="/react.svg" width="150" class="inline-block p-4"><img src="/next.js.svg" width="100" class="inline-block p-4"><img src="/material_ui.png" width="150" class="inline-block p-4"> |
+| <kbd>frontend</kbd> | <img src="/typescript.svg" width="70" class="inline-block p-4"><img src="/react.svg" width="150" class="inline-block p-4"><img src="/next.js.svg" width="100" class="inline-block p-4"><img src="/material_ui.png" width="180" class="inline-block p-4"> |
 | <kbd>backend</kbd> | <img src="/rust.svg" width="80" class="inline-block p-4"><img src="/actixweb.jpg" width="150" class="inline-block p-4"> |
 | <kbd>CI/CD</kbd> | <img src="/github_actions.png" width="80"> |
 | <kbd>認証・認可</kbd> | <img src="/auth0.png" width="100"> |
@@ -101,15 +101,15 @@ drawings:
 | <kbd>frontend</kbd> | SSRに対応 |
 | <kbd>backend</kbd> | DDD指向・オニオンアーキテクチャで実装 |
 | <kbd>CI/CD</kbd> | [aws謹製のactions](https://github.com/aws-actions)で実装 |
-| <kbd>認証・認可</kbd> | [Organizations](https://auth0.com/docs/organizations)機能を使用（予定） |
+| <kbd>認証・認可</kbd> | OIDCに則って各APIを構築 ・ [Organizations](https://auth0.com/docs/organizations)機能を使用（予定） |
 
 ---
 layout: two-cols
 ---
 
-# 使用技術（Dockerfile未満）
+# 使用技術<br/>（Dockerfile未満）
 
-## ほぼAWS
+## コンテナー・ネットワーク
 
 - ECS on Fargate
 - ECR
@@ -120,26 +120,29 @@ layout: two-cols
 - Firelens
 - BudgetsをChatbotでSlackに通知
 ::right::
+
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+## セキュリティ
 - IAM・KMSをちゃんと管理
 - Config
 - Organizations
 - WAF
 - Shield
 - Firewall Manager
-- Guard DUty
+- Guard Duty
 - Macie
 
----
-layout: image
-image: /real_resources.svg
-class: max-h-full max-w-full w-auto
 ---
 
 ## 実体リソース
 
-ああ
-
-<!-- <img src="/real_resources.svg" border="rounded" width="600"> -->
+<img src="/real_resources.svg" border="rounded" width="600">
 
 ---
 
@@ -158,6 +161,42 @@ class: max-h-full max-w-full w-auto
 ## dev環境のみの構成
 
 <img src="/dev_environment.svg" border="rounded" width="500">
+
+---
+
+# ログ設計
+
+- firelens
+
+
+---
+# 監視
+
+- Datadog
+- Amazon Managed Service for Grafana
+- Amazon Managed Service for Prometheus
+
+---
+layout: two-cols
+---
+
+# 今後やりたい
+
+- Prisma Cloud
+- EKS
+- Linkerd
+- IaC
+    - CDK
+    - plumi
+::right::
+- CSツール
+    - Intercom
+- 利用規約
+- セキュリティチェックシート
+    - ホワイトペーパー作成
+    - 静的サイト作成
+- サービス時間、SLAの策定
+
 ---
 
 # Navigation
@@ -175,14 +214,13 @@ Hover on the bottom-left corner to see the navigation's controls panel, [learn m
 <p v-after class="absolute bottom-23 left-45 opacity-30 transform -rotate-10">Here!</p>
 
 ---
-
 layout: image-right
 image: <https://source.unsplash.com/collection/94734566/1920x1080>
 ---
 
 # Code
 
-Use code snippets and get the highlighting directly![^1]
+Use code snippets and get the highlighting directly!
 
 ```ts {all|2|1-6|9|all}
 interface User {
