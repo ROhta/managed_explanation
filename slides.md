@@ -201,9 +201,45 @@ drawings:
     - Istioほどの機能は不要
     - とにかくメンテしたくない
 - envoyコンテナーをサイドカー構成でecsタスクに同梱した
+- ingressアクセスをサービスメッシュで管理できるように、仮想ゲートウェイを構築した
 - EKS移行後にLinkerdを検討予定
     - [k8sが前提のツールなため](https://servicemesh.es)
     - [envoyじゃない](https://linkerd.io/2020/12/03/why-linkerd-doesnt-use-envoy/)メリデメを考える
+
+---
+
+# サービスメッシュ
+
+- AWS App Mesh採用
+    - 選択肢はApp Mesh, Istio, Linkerdだった
+    - Istioほどの機能は不要
+    - とにかくメンテしたくない
+- envoyコンテナーをサイドカー構成でecsタスクに同梱した
+- ingressアクセスをサービスメッシュで管理できるように、仮想ゲートウェイを構築した
+- EKS移行後にLinkerdを検討予定
+    - [k8sが前提のツールなため](https://servicemesh.es)
+    - [envoyじゃない](https://linkerd.io/2020/12/03/why-linkerd-doesnt-use-envoy/)メリデメを考える
+
+# トレース
+
+- AWS XRayがよかった
+    - rust用のXRay SDKがないので、トレース用データを送信できない。。。
+- datadog agentでトレースする（予定）
+
+---
+
+# 仮想リソース
+
+<img src="/virtual_resources.svg" width="600">
+
+---
+
+# ECSタスク
+各ECSサービスはタスクに以下のコンテナーを持つ
+- log_router
+- envoy
+- datadog agent（予定）
+- app
 
 ---
 
