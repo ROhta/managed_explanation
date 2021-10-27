@@ -16,6 +16,6 @@
   },
   "dependencies": {
     "@slidev/cli": "^0.27.8",
-    "slidev-theme-flayyer": "^1.0.2"
+    "@slidev/theme-shibainu": "^0.0.2"
   }
 }

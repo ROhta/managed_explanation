@@ -1,5 +1,5 @@
 ---
-theme: flayyer
+theme: shibainu
 background: https://source.unsplash.com/collection/94734566/1920x1080
 class: 'text-center'
 highlighter: shiki
@@ -85,12 +85,16 @@ drawings:
 
 # 使用技術（Dockerfile以上）
 
+---
+
+# 使用技術（Dockerfile以上）
+
 |     |     |
 | --- | --- |
-| <kbd>frontend</kbd> | <img src="/typescript.svg" width="70" class="inline-block p-4"><img src="/react.svg" width="150" class="inline-block p-4"><img src="/next.js.svg" width="100" class="inline-block p-4"><img src="/material_ui.png" width="180" class="inline-block p-4"> |
+| <kbd>frontend</kbd> | <img src="/typescript.svg" width="70" class="inline-block p-4"><img src="/react.svg" width="150" class="inline-block p-4"><img src="/next.js.svg" width="100" class="inline-block p-4"><img src="/material_ui.svg" width="180" class="inline-block p-4"> |
 | <kbd>backend</kbd> | <img src="/rust.svg" width="80" class="inline-block p-4"><img src="/actixweb.jpg" width="150" class="inline-block p-4"> |
-| <kbd>CI/CD</kbd> | <img src="/github_actions.png" width="80"> |
-| <kbd>認証・認可</kbd> | <img src="/auth0.png" width="100"> |
+| <kbd>CI/CD</kbd> | <img src="/github_actions.svg" width="80"> |
+| <kbd>認証・認可</kbd> | <img src="/auth0.svg" width="100"> |
 
 ---
 
@@ -104,10 +108,12 @@ drawings:
 | <kbd>認証・認可</kbd> | OIDCに則って各APIを構築 ・ [Organizations](https://auth0.com/docs/organizations)機能を使用（予定） |
 
 ---
-layout: two-cols
+
+# 使用技術（Dockerfile未満）
+
 ---
 
-# 使用技術<br/>（Dockerfile未満）
+# 使用技術（Dockerfile未満）
 
 ## コンテナー・ネットワーク
 
@@ -118,25 +124,6 @@ layout: two-cols
 - Cloud Map
 - Cloudwatch Logs
 - Firelens
-- BudgetsをChatbotでSlackに通知
-::right::
-
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-
-## セキュリティ
-- IAM・KMSをちゃんと管理
-- Config
-- Organizations
-- WAF
-- Shield
-- Firewall Manager
-- Guard Duty
-- Macie
 
 ---
 
@@ -149,6 +136,25 @@ layout: two-cols
 ## 仮想リソース
 
 <img src="/virtual_resources.svg" border="rounded" width="600">
+
+---
+
+# 使用技術（Dockerfile未満）
+
+---
+
+# 使用技術（Dockerfile未満）
+
+## セキュリティ
+- IAM・KMSをちゃんと管理
+- Config
+- Organizations
+- WAF
+- Shield
+- Firewall Manager
+- Guard Duty
+- Macie
+- BudgetsをChatbotでSlackに通知
 
 ---
 
@@ -177,10 +183,19 @@ layout: two-cols
 - Amazon Managed Service for Prometheus
 
 ---
-layout: two-cols
+
+# システム検証
+
+- AWS FIS
+- Gremlin
+
+# 今後やりたい
+
 ---
 
 # 今後やりたい
+
+## システム面
 
 - Prisma Cloud
 - EKS
@@ -188,7 +203,13 @@ layout: two-cols
 - IaC
     - CDK
     - plumi
-::right::
+
+---
+
+# 今後やりたい
+
+## サービス面
+
 - CSツール
     - Intercom
 - 利用規約
