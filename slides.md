@@ -83,6 +83,20 @@ drawings:
 </style>
 
 ---
+layout: section-2
+---
+
+# サ－ビス概要
+
+---
+
+# サ－ビス概要
+
+ - 機能要件
+    - ユーザ・企業・接続元IPリストのCRUDをする
+    - ユーザを作る権限を持った企業外ユーザ（販売代理店等）を管理する
+
+---
 
 # サ－ビス概要
 
@@ -111,9 +125,11 @@ drawings:
         - WAF
         - AWSアカウント自体の管理
 
-
 ---
-# 使用技術（Dockerfile以上）
+layout: section-2
+---
+
+# 使用技術<br/>（Dockerfile未満）
 
 ---
 
@@ -138,13 +154,18 @@ drawings:
 | <kbd>認証・認可</kbd> | OIDCに則って各APIを構築 ・ [Organizations](https://auth0.com/docs/organizations)機能を使用（予定） |
 
 ---
+layout: section-2
+---
 
+# 使用技術<br/>（Dockerfile未満）
+
+---
 # 使用技術（Dockerfile未満）
+## コンテナー・ネットワーク
 
 ---
 
 # 使用技術（Dockerfile未満）
-
 ## コンテナー・ネットワーク
 
 - AWS ECS on Fargate
@@ -235,11 +256,18 @@ drawings:
 ---
 
 # ECSタスク
+
 各ECSサービスはタスクに以下のコンテナーを持つ
 - log_router
 - envoy
 - datadog agent（予定）
 - app
+
+---
+layout: section-2
+---
+
+# 使用技術<br/>（Dockerfile未満）
 
 ---
 
