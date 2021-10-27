@@ -81,20 +81,33 @@ drawings:
     pointer-events: none;
  }
 </style>
+
 ---
 
 # サ－ビス概要
 
  - 機能要件
-    - ユーザ・企業・接続元IPリストのCRUD
-    - 機能要件だけ見るとチュートリアルレベル
+    - ユーザ・企業・接続元IPリストのCRUDをする
+    - ユーザを作る権限を持った企業外ユーザ（販売代理店等）を管理する
+
+機能要件だけ見るとチュートリアルに毛が生えた程度
+
+---
+
+# サ－ビス概要
 
 - 非機能要件
     - 別VPCのRDSを操作する
-    - マイクロサービスの運用を効率化する
+    - マイクロサービスの開発・運用を効率化する
         - ログ・監視の一覧性
+        - 冪等性の考慮
+          - 分散トランザクション管理をなるべくやらない → Sagaパターンが実装不要になるアーキテクチャを考える
+        - アプリケーション実装をビジネス実装に集中させる = インフラレイヤーでなるべく巻き取る
+          - ログ振分け・サーキットブレイカー等
+    - 認証・認可
+        - OIDC
+        - 製品アクセスの有無により、ユーザプールを分割する
     - セキュリティ最重視
-        - 認証・認可
         - WAF
         - AWSアカウント自体の管理
 
@@ -156,7 +169,7 @@ drawings:
 # ログ設計
 
 - リクエストの流れを追いやすい設計にする
-    - 1つのリクエストに対して、全ノードのログを一か所で見たい
+    - 1つのリクエストに対して、全ノードのログを一ヶ所で見たい
     - frontendのロググループを見て、次はbackendのログを見て、というログ設計はやめる
 
 ## [firelens](https://dev.classmethod.jp/articles/aws-fargate-with-firelens-minimum/)
@@ -206,9 +219,9 @@ drawings:
 
 - AWS Config
 - AWS Organizations
-- AWS WAF
-- AWS Shield
-- AWS Firewall Manager
+    - AWS WAF
+    - AWS Shield
+    - AWS Firewall Manager
 - AWS Guard Duty
 - AWS Macie
 - AWS KMSをきちんと管理
@@ -250,6 +263,9 @@ Amazon Managed Service for Grafana
 
 ## システム面
 
+- frontend管理
+    - Cypress
+    - Storybook
 - WAF
     - Prisma Cloud
 - k8s
@@ -257,11 +273,9 @@ Amazon Managed Service for Grafana
 - サービスメッシュ
     - Linkerd
 - IaC
-    - AWS CDK
-    - plumi
+    - AWS CDK or Plumi
 - カオスエンジニアリング
-    - AWS FIS
-    - Gremlin
+    - AWS FIS or Gremlin
 
 ---
 
