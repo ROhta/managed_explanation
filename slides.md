@@ -2,7 +2,7 @@
 theme: shibainu
 background: https://source.unsplash.com/collection/94734566/1920x1080
 class: 'text-center'
-highlighter: shiki
+highlighter: prism
 lineNumbers: true
 info: |
   ## 開発説明
@@ -10,7 +10,7 @@ drawings:
   persist: true
 ---
 
-# Welcome to Slidev
+# ユーザ管理画面開発説明
 
 <!--
 コメント書く
@@ -83,6 +83,23 @@ drawings:
 </style>
 ---
 
+# サ－ビス概要
+
+ - 機能要件
+    - ユーザ・企業・接続元IPリストのCRUD
+    - 機能要件だけ見るとチュートリアルレベル
+
+- 非機能要件
+    - 別VPCのRDSを操作する
+    - マイクロサービスの運用を効率化する
+        - ログ・監視の一覧性
+    - セキュリティ最重視
+        - 認証・認可
+        - WAF
+        - AWSアカウント自体の管理
+
+
+---
 # 使用技術（Dockerfile以上）
 
 ---
@@ -103,7 +120,7 @@ drawings:
 |     |     |
 | --- | --- |
 | <kbd>frontend</kbd> | SSRに対応 |
-| <kbd>backend</kbd> | DDD指向・オニオンアーキテクチャで実装 |
+| <kbd>backend</kbd> | DDD指向・オニオンアーキテクチャで実装、リソースAPIではトークン検証処理を行う |
 | <kbd>CI/CD</kbd> | [aws謹製のactions](https://github.com/aws-actions)で実装 |
 | <kbd>認証・認可</kbd> | OIDCに則って各APIを構築 ・ [Organizations](https://auth0.com/docs/organizations)機能を使用（予定） |
 
@@ -117,360 +134,168 @@ drawings:
 
 ## コンテナー・ネットワーク
 
-- ECS on Fargate
-- ECR
-- App Mesh
+- AWS ECS on Fargate
+- AWS ECR
+- AWS Application Load Balancer
+- AWS Firelens
+- AWS Cloudwatch Logs
+- AWS Cloud Map
+- AWS Route53
+    - DNS SEC署名有効化
+- AWS App Mesh
   - mTLS有効化
-- Cloud Map
-- Cloudwatch Logs
-- Firelens
 
 ---
 
-## 実体リソース
+# 実体リソース
 
-<img src="/real_resources.svg" border="rounded" width="600">
-
----
-
-## 仮想リソース
-
-<img src="/virtual_resources.svg" border="rounded" width="600">
+<img src="/real_resources.svg" width="600">
 
 ---
 
-# 使用技術（Dockerfile未満）
+# ログ設計
+
+- リクエストの流れを追いやすい設計にする
+    - 1つのリクエストに対して、全ノードのログを一か所で見たい
+    - frontendのロググループを見て、次はbackendのログを見て、というログ設計はやめる
+
+## [firelens](https://dev.classmethod.jp/articles/aws-fargate-with-firelens-minimum/)
+
+- awsのマネージドサービス用にカスタマイズされたfluent bit
+- log_routerコンテナーをサイドカー構成でecsタスクに同梱し、好きな場所にログ送信できる
+    - envoyのアクセスログはs3、アプリケーションログはcloudwatch logs、アクセスログうち特定のIPだけkinesis data firehose経由でAmazon OpenSearchに、等
+- 試されるfluent bit力
+    - 全ログをとりあえずcloudwatch logsに出力中
+    - Datadogにも出力して、可視性・一覧性を追求する
+
+---
+# 実体リソース
+
+<img src="/real_resources.svg" width="600">
+
+---
+
+# 仮想リソース
+
+<img src="/virtual_resources.svg" width="600">
+
+---
+
+# サービスメッシュ
+
+- AWS App Mesh採用
+    - 選択肢はApp Mesh, Istio, Linkerdだった
+    - Istioほどの機能は不要
+    - とにかくメンテしたくない
+- envoyコンテナーをサイドカー構成でecsタスクに同梱した
+- EKS移行後にLinkerdを検討予定
+    - [k8sが前提のツールなため](https://servicemesh.es)
+    - [envoyじゃない](https://linkerd.io/2020/12/03/why-linkerd-doesnt-use-envoy/)メリデメを考える
 
 ---
 
 # 使用技術（Dockerfile未満）
 
 ## セキュリティ
-- IAM・KMSをちゃんと管理
-- Config
-- Organizations
-- WAF
-- Shield
-- Firewall Manager
-- Guard Duty
-- Macie
-- BudgetsをChatbotでSlackに通知
+
+---
+
+# 使用技術（Dockerfile未満）
+
+## セキュリティ
+
+- AWS Config
+- AWS Organizations
+- AWS WAF
+- AWS Shield
+- AWS Firewall Manager
+- AWS Guard Duty
+- AWS Macie
+- AWS KMSをきちんと管理
+    - 鍵有効期限の管理
+- AWS IAMをきちんと管理
+    - きちんとIAMグループ作ってポリシー割当
+    - 各IAMユーザにパーミッションバウンダリを設定
+- [AWS BudgetsをChatbotでSlackに通知させてる](https://dev.classmethod.jp/articles/aws-budgets-alert-by-aws-chatbot/)
 
 ---
 
 ## セキュリティ対策も追加
 
-<img src="/add_security_resources.svg" border="rounded" width="600">
+<img src="/add_security_resources.svg" width="600">
 
 ---
 
 ## dev環境のみの構成
 
-<img src="/dev_environment.svg" border="rounded" width="500">
+<img src="/dev_environment.svg" width="500">
 
 ---
 
-# ログ設計
-
-- firelens
-
-
----
 # 監視
 
-- Datadog
-- Amazon Managed Service for Grafana
-- Amazon Managed Service for Prometheus
+```markdown {1|2-3|all}
+Datadog
+Amazon Managed Service for Prometheus
+Amazon Managed Service for Grafana
+```
 
 ---
 
-# システム検証
-
-- AWS FIS
-- Gremlin
-
-# 今後やりたい
+# 今後
 
 ---
 
-# 今後やりたい
+# 今後
 
 ## システム面
 
-- Prisma Cloud
-- EKS
-- Linkerd
+- WAF
+    - Prisma Cloud
+- k8s
+    - AWS EKS
+- サービスメッシュ
+    - Linkerd
 - IaC
-    - CDK
+    - AWS CDK
     - plumi
+- カオスエンジニアリング
+    - AWS FIS
+    - Gremlin
 
 ---
 
-# 今後やりたい
+# 今後
 
 ## サービス面
 
-- CSツール
-    - Intercom
+- CS連携の整備
+    - サービス時間、SLAの策定
+    - Intercom他、ツール検討
 - 利用規約
 - セキュリティチェックシート
     - ホワイトペーパー作成
     - 静的サイト作成
-- サービス時間、SLAの策定
 
 ---
 
-# Navigation
+# 今後
 
-Hover on the bottom-left corner to see the navigation's controls panel, [learn more](https://sli.dev/guide/navigation.html)
-
-### Keyboard Shortcuts
-
-<!-- https://sli.dev/guide/animations.html#click-animations -->
-<img
-  v-click
-  class="absolute -bottom-9 -left-7 w-80 opacity-50"
-  src="https://sli.dev/assets/arrow-bottom-left.svg"
-/>
-<p v-after class="absolute bottom-23 left-45 opacity-30 transform -rotate-10">Here!</p>
-
----
-layout: image-right
-image: <https://source.unsplash.com/collection/94734566/1920x1080>
----
-
-# Code
-
-Use code snippets and get the highlighting directly!
-
-```ts {all|2|1-6|9|all}
-interface User {
-  id: number
-  firstName: string
-  lastName: string
-  role: string
-}
-
-function updateUser(id: number, update: User) {
-  const user = getUser(id)
-  const newUser = {...user, ...update}
-  saveUser(id, newUser)
-}
-```
-
-<arrow v-click="3" x1="400" y1="420" x2="230" y2="330" color="#564" width="3" arrowSize="1" />
-
-[^1]: [Learn More](https://sli.dev/guide/syntax.html#line-highlighting)
-
-<style>
-.footnotes-sep {
-  @apply mt-20 opacity-10;
-}
-.footnotes {
-  @apply text-sm opacity-75;
-}
-.footnote-backref {
-  display: none;
-}
-</style>
+<img src="tegamawaranai.jpg" width="450">
 
 ---
 
-# Components
-
-<div grid="~ cols-2 gap-4">
-<div>
-
-You can use Vue components directly inside your slides.
-
-We have provided a few built-in components like `<Tweet/>` and `<Youtube/>` that you can use directly. And adding your custom components is also super easy.
-
-```html
-<Counter :count="10" />
-```
-
-<!-- ./components/Counter.vue -->
-<Counter :count="10" m="t-4" />
-
-Check out [the guides](https://sli.dev/builtin/components.html) for more.
-
-</div>
-<div>
-
-```html
-<Tweet id="1390115482657726468" />
-```
-
-<Tweet id="1390115482657726468" scale="0.65" />
-
-</div>
-</div>
-
----
-
-# Themes
-
-Slidev comes with powerful theming support. Themes can provide styles, layouts, components, or even configurations for tools. Switching between themes by just **one edit** in your frontmatter:
+#
 
 <div grid="~ cols-2 gap-2" m="-t-2">
-
-```yaml
----
-theme: default
----
-```
-
-```yaml
----
-theme: seriph
----
-```
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-default/01.png?raw=true">
-
-<img border="rounded" src="https://github.com/slidevjs/themes/blob/main/screenshots/theme-seriph/01.png?raw=true">
-
-</div>
-
-Read more about [How to use a theme](https://sli.dev/themes/use.html) and
-check out the [Awesome Themes Gallery](https://sli.dev/themes/gallery.html).
-
----
-
-preload: false
----
-
-# Animations
-
-Animations are powered by [@vueuse/motion](https://motion.vueuse.org/).
-
-```html
-<div
-  v-motion
-  :initial="{ x: -80 }"
-  :enter="{ x: 0 }">
-  Slidev
-</div>
-```
-
-<div class="w-60 relative mt-6">
-  <div class="relative w-40 h-40">
-    <img
-      v-motion
-      :initial="{ x: 800, y: -100, scale: 1.5, rotate: -50 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-square.png"
-    />
-    <img
-      v-motion
-      :initial="{ y: 500, x: -100, scale: 2 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-circle.png"
-    />
-    <img
-      v-motion
-      :initial="{ x: 600, y: 400, scale: 2, rotate: 100 }"
-      :enter="final"
-      class="absolute top-0 left-0 right-0 bottom-0"
-      src="https://sli.dev/logo-triangle.png"
-    />
-  </div>
-
-  <div
-    class="text-5xl absolute top-14 left-40 text-[#2B90B6] -z-1"
-    v-motion
-    :initial="{ x: -80, opacity: 0}"
-    :enter="{ x: 0, opacity: 1, transition: { delay: 2000, duration: 1000 } }">
-    Slidev
-  </div>
-</div>
-
-<!-- vue script setup scripts can be directly used in markdown, and will only affects current page -->
-<script setup lang="ts">
-const final = {
-  x: 0,
-  y: 0,
-  rotate: 0,
-  scale: 1,
-  transition: {
-    type: 'spring',
-    damping: 10,
-    stiffness: 20,
-    mass: 2
-  }
-}
-</script>
-
-<div
-  v-motion
-  :initial="{ x:35, y: 40, opacity: 0}"
-  :enter="{ y: 0, opacity: 1, transition: { delay: 3500 } }">
-
-[Learn More](https://sli.dev/guide/animations.html#motion)
-
+<img src="tegatarinai.jpg">
 </div>
 
 ---
 
-# LaTeX
+#
 
-LaTeX is supported out-of-box powered by [KaTeX](https://katex.org/).
-
-<br>
-
-Inline $\sqrt{3x-1}+(1+x)^2$
-
-Block
-$$
-\begin{array}{c}
-
-\nabla \times \vec{\mathbf{B}} -\, \frac1c\, \frac{\partial\vec{\mathbf{E}}}{\partial t} &
-= \frac{4\pi}{c}\vec{\mathbf{j}}    \nabla \cdot \vec{\mathbf{E}} & = 4 \pi \rho \\
-
-\nabla \times \vec{\mathbf{E}}\, +\, \frac1c\, \frac{\partial\vec{\mathbf{B}}}{\partial t} & = \vec{\mathbf{0}} \\
-
-\nabla \cdot \vec{\mathbf{B}} & = 0
-
-\end{array}
-$$
-
-<br>
-
-[Learn more](https://sli.dev/guide/syntax#latex)
-
----
-
-# Diagrams
-
-You can create diagrams / graphs from textual descriptions, directly in your Markdown.
-
-<div class="grid grid-cols-2 gap-10 pt-4 -mb-6">
-
-```mermaid {scale: 0.9}
-sequenceDiagram
-    Alice->John: Hello John, how are you?
-    Note over Alice,John: A typical interaction
-```
-
-```mermaid {theme: 'neutral', scale: 0.8}
-graph TD
-B[Text] --> C{Decision}
-C -->|One| D[Result 1]
-C -->|Two| E[Result 2]
-```
-
+<div grid="~ cols-2 gap-2" m="-t-2">
+<img src="tegatarinai.jpg">
+<img src="yoroshiku.jpg" width="380">
 </div>
-
-[Learn More](https://sli.dev/guide/syntax.html#diagrams)
-
----
-
-layout: center
-class: text-center
----
-
-# Learn More
-
-[Documentations](https://sli.dev) · [GitHub](https://github.com/slidevjs/slidev) · [Showcases](https://sli.dev/showcases.html)
