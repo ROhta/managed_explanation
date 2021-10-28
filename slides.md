@@ -1,6 +1,5 @@
 ---
 theme: shibainu
-background: https://source.unsplash.com/collection/94734566/1920x1080
 class: 'text-center'
 highlighter: prism
 lineNumbers: true
@@ -16,7 +15,8 @@ drawings:
 コメント書く
 -->
 ---
-
+layout: quote
+---
 #
 
 <div class="titles"><div class="titlecontent">
@@ -126,10 +126,10 @@ layout: section-2
         - AWSアカウント自体の管理
 
 ---
-layout: section-2
+layout: section-3
 ---
 
-# 使用技術<br/>（Dockerfile未満）
+# 使用技術（Dockerfile以上）
 
 ---
 
@@ -154,10 +154,10 @@ layout: section-2
 | <kbd>認証・認可</kbd> | OIDCに則って各APIを構築 ・ [Organizations](https://auth0.com/docs/organizations)機能を使用（予定） |
 
 ---
-layout: section-2
+layout: section-3
 ---
 
-# 使用技術<br/>（Dockerfile未満）
+# 使用技術（Dockerfile未満）
 
 ---
 # 使用技術（Dockerfile未満）
@@ -179,6 +179,8 @@ layout: section-2
 - AWS App Mesh
   - mTLS有効化
 
+---
+layout: default-6
 ---
 
 # 実体リソース
@@ -203,10 +205,15 @@ layout: section-2
     - Datadogにも出力して、可視性・一覧性を追求する
 
 ---
+layout: default-6
+---
+
 # 実体リソース
 
 <img src="/real_resources.svg" width="600">
 
+---
+layout: default-6
 ---
 
 # 仮想リソース
@@ -248,6 +255,8 @@ layout: section-2
 - datadog agentでトレースする（予定）
 
 ---
+layout: default-6
+---
 
 # 仮想リソース
 
@@ -264,10 +273,10 @@ layout: section-2
 - app
 
 ---
-layout: section-2
+layout: section-3
 ---
 
-# 使用技術<br/>（Dockerfile未満）
+# 使用技術（Dockerfile未満）<br/><br/>まだあるよ
 
 ---
 
@@ -296,11 +305,23 @@ layout: section-2
 - [AWS BudgetsをChatbotでSlackに通知させてる](https://dev.classmethod.jp/articles/aws-budgets-alert-by-aws-chatbot/)
 
 ---
+layout: default-6
+---
+
+# 実体リソース
+
+<img src="/real_resources.svg" width="600">
+
+---
+layout: default-6
+---
 
 ## セキュリティ対策も追加
 
 <img src="/add_security_resources.svg" width="600">
 
+---
+layout: default-6
 ---
 
 ## dev環境のみの構成
@@ -356,11 +377,15 @@ Amazon Managed Service for Grafana
     - 静的サイト作成
 
 ---
+layout: default-7
+---
 
 # 今後
 
 <img src="tegamawaranai.jpg" width="450">
 
+---
+layout: default-7
 ---
 
 #
@@ -370,6 +395,9 @@ Amazon Managed Service for Grafana
 </div>
 
 ---
+layout: default-7
+---
+
 
 #
 
