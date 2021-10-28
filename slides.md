@@ -153,9 +153,9 @@ layout: section-2
         <p>Issuesはボタン一つでテンプレートを使い分けられるように</p>
     </div>
     <div>
-        <img src="github_discussions.png" width= "500">
+        <img src="/github_discussions.png" width= "500">
         <br/>
-        <img src="github_issue_template.png" width= "500">
+        <img src="/github_issue_template.png" width= "500">
     </div>
 </div>
 
@@ -170,7 +170,7 @@ layout: section-2
         <p>カスタムフィールドでPriorityを追加</p>
         <p>Priority毎にグループ分けして表示</p>
     </div>
-    <img src="github_project.png" width= "500">
+    <img src="/github_project.png" width= "500">
 </div>
 
 ---
@@ -184,7 +184,7 @@ layout: section-2
         <p>sortが奇麗になるよう、bug, enhance等の接頭辞を付与</p>
         <p>色の並びにも気を配った</p>
     </div>
-    <img src="github_labels.png" width="370">
+    <img src="/github_labels.png" width="370">
 </div>
 
 ---
@@ -563,7 +563,7 @@ layout: default-7
 
 # 今後
 
-<img src="tegamawaranai.jpg" width="450">
+<img src="/tegamawaranai.jpg" width="450">
 
 ---
 layout: default-7
@@ -572,7 +572,7 @@ layout: default-7
 #
 
 <div grid="~ cols-2 gap-2" m="-t-2">
-<img src="tegatarinai.jpg">
+<img src="/tegatarinai.jpg">
 </div>
 
 ---
@@ -583,6 +583,6 @@ layout: default-7
 #
 
 <div grid="~ cols-2 gap-2" m="-t-2">
-<img src="tegatarinai.jpg">
-<img src="yoroshiku.jpg" width="380">
+<img src="/tegatarinai.jpg">
+<img src="/yoroshiku.jpg" width="380">
 </div>
