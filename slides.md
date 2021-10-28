@@ -146,7 +146,7 @@ layout: section-2
 <div grid="~ cols-2 gap-2" m="-t-2">
     <div>
         <p>Discussions → Issues → Pull Requests の流れが最高</p>
-        <p>Discussions<br/>とりあえずの提案・バグか仕様か分からないので質問</p>
+        <p>Discussions<br/>とりあえずの提案・バグか仕様か分からないので質問、等</p>
         <p>Issues<br/>やることが決定したもの</p>
         <p>Pull Requests<br/>実装のレビュー</p>
         <p>IssuesやPull Requestsはテンプレートを設置</p>
@@ -165,7 +165,7 @@ layout: section-2
 
 <div grid="~ cols-2 gap-2" m="-t-2">
     <div>
-        <p>複数リポジトリのIssueを一覧化</p>
+        <p>複数リポジトリのIssuesを一覧化</p>
         <p>各マイクロサービスのリポジトリを一つ一つ見に行く必要がない</p>
         <p>カスタムフィールドでPriorityを追加</p>
         <p>Priority毎にグループ分けして表示</p>
@@ -179,7 +179,7 @@ layout: section-2
 
 <div grid="~ cols-2 gap-2" m="-t-2">
     <div>
-        <p>JIRAのように扱うため、labelで機能補完</p>
+        <p>JIRAのように扱うため、labelsで機能補完</p>
         <p>closed, blocked by等、チケット間の関係性を表現</p>
         <p>sortが奇麗になるよう、bug, enhance等の接頭辞を付与</p>
         <p>色の並びにも気を配った</p>
@@ -277,6 +277,19 @@ layout: default-6
 
 # 開発秘話
 
+- 今回の場合では、設定ファイル無しでfirelensを使える
+    - ブログを漁ると、fluent bitの設定ファイルが必要という記事ばかり出てくるが、管理コスト。。。
+       - s3に置く、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
+    - ログ出力先が一ヶ所の場合のみ、タスク定義に記載したオプションを設定値としてfluent bitに渡せる
+- log_routerコンテナー自体のログ（Cloudwatch Logs）にDataAlreadyAcceptedExceptionエラーが出力され続ける
+    - `The given batch of log events has already been accepted. The next batch can be sent with sequenceToken`のメッセージが、ECSタスクがリクエストを受け付ける毎に記録される
+    - [Cloudwatch LogsのsequenceTokenは被っていなかった](https://michimani.net/post/use-cloudwatch-via-aws-cli/)
+    - 原因は、log_routerコンテナーのデフォ値と自分で設定した値の競合だった
+        - aws製fluent bitコンテナーは、[このような値](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/firelens-taskdef.html)を無条件設定する
+        - [fluent bit公式](https://docs.fluentbit.io/manual/pipeline/outputs/cloudwatch)を参考に、タスク定義のlogConfigurationで`"Match": "*"` を設定した
+        - Matchパラメーターが複数設定され、ログの二重送信をCloudWatch Logsが拒否した結果、DataAlreadyAcceptedExceptionエラーが発生していた
+    - AWSサポートに問い合わせて、解決まで2か月かかった。。。
+
 ---
 layout: default-6
 ---
@@ -320,14 +333,20 @@ layout: default-6
 <img src="/virtual_resources.svg" width="600">
 
 ---
+layout: default-5
+---
 
 # ECSタスク
 
-各ECSサービスはタスクに以下のコンテナーを持つ
-- log_router
-- envoy
-- datadog agent（予定）
-- app
+- 各ECSサービスはタスクに以下のコンテナーを持つ
+    - log_router
+    - envoy
+    - datadog agent（予定）
+    - app
+
+- 管理するコンテナーはappだけ
+    - 仮想ゲートウェイのタスクはappコンテナー無し
+- ecs execで各コンテナー内にssmできるよう設定済み
 
 ---
 layout: section-2
