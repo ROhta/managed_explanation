@@ -283,6 +283,7 @@ layout: default-6
     - Datadogにも出力して、可視性・一覧性を追求する
 
 ---
+
 # 開発秘話
 
 - 今回の場合では、設定ファイル無しでfirelensを使える
@@ -291,6 +292,7 @@ layout: default-6
     - ログ出力先が一ヶ所の場合のみ、タスク定義に記載したオプションを設定値としてfluent bitに渡せる
 
 ---
+
 # 開発秘話
 
 - 今回の場合では、設定ファイル無しでfirelensを使える
@@ -339,7 +341,24 @@ layout: default-6
 ---
 
 # 開発秘話
+
+マネコンで設定すると、誤ったデフォルト値が強制挿入される
+
+- AWSマネジメントコンソールでタスク定義を作成する際、App Mesh統合の有効化にチェックを入れると、App Meshで用いるenvoyイメージや必要な設定が自動挿入される
+    - 東京リージョンで自動設定されるイメージは`840364872350.dkr.ecr.ap-northeast-1.amazonaws.com/aws-appmesh-envoy:v1.19.1.0-prod`だった
+    - 挿入される情報の1つにコンテナー環境変数`APPMESH_VIRTUAL_NODE_NAME`があった
+- [公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、イメージバージョン1.15.0は、環境変数`APPMESH_RESOURCE_ARN`を用いなければならない
+    - バージョン1.19.1のイメージで`APPMESH_VIRTUAL_NODE_NAME`を追加すると、挙動が不安定になる
+       - envoyからappへの通信がconnection errorとなった
+- App Mesh統合の有効化にチェックを入れた時点で、環境変数`APPMESH_VIRTUAL_NODE_NAME`をすると、エラーが出てタスク定義の保存に失敗する
+    - App Mesh統合の有効化にチェックを外したうえで、タスク定義のJSONを手で書くしかなかった
+
+---
+
+# 開発秘話
+
 朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
+
 - 原因は、アプリケーションのヘルスチェックエンドポイントのステータスが200でなかったこと
     - 通信経路は以下
         1. Route53ホストゾーン
