@@ -235,26 +235,6 @@ layout: default-6
     - [envoyじゃない](https://linkerd.io/2020/12/03/why-linkerd-doesnt-use-envoy/)メリデメを考える
 
 ---
-
-# サービスメッシュ
-
-- AWS App Mesh採用
-    - 選択肢はApp Mesh, Istio, Linkerdだった
-    - Istioほどの機能は不要
-    - とにかくメンテしたくない
-- envoyコンテナーをサイドカー構成でecsタスクに同梱した
-- ingressアクセスをサービスメッシュで管理できるように、仮想ゲートウェイを構築した
-- EKS移行後にLinkerdを検討予定
-    - [k8sが前提のツールなため](https://servicemesh.es)
-    - [envoyじゃない](https://linkerd.io/2020/12/03/why-linkerd-doesnt-use-envoy/)メリデメを考える
-
-# トレース
-
-- AWS XRayがよかった
-    - rust用のXRay SDKがないので、トレース用データを送信できない。。。
-- datadog agentでトレースする（予定）
-
----
 layout: default-6
 ---
 
@@ -330,14 +310,35 @@ layout: default-6
 
 ---
 
-# 監視
+## モニタリング（トレース）
 
-```markdown {1|2-3|all}
+- AWS XRayを使いたかった
+    - rust用のXRay SDKがないので、トレース用データを送信できない。。。
+- Datadog agentでトレースする（予定）
+
+## モニタリング（ログ）
+
+firelensでどこにでも出せる
+
+```markdown {1|2}
+AWS Cloudwatch Logs
 Datadog
+```
+
+
+## モニタリング（メトリクス）
+
+```markdown {1|2|3-4|1}
+Datadog
+AWS Container Insights
 Amazon Managed Service for Prometheus
 Amazon Managed Service for Grafana
 ```
 
+# **Datadog頑張る**
+
+---
+layout: section-2
 ---
 
 # 今後
@@ -349,14 +350,14 @@ Amazon Managed Service for Grafana
 ## システム面
 
 - frontend管理
-    - Cypress
     - Storybook
+    - Cypress
 - WAF
     - Prisma Cloud
-- k8s
-    - AWS EKS
 - サービスメッシュ
     - Linkerd
+- k8s
+    - AWS EKS
 - IaC
     - AWS CDK or Plumi
 - カオスエンジニアリング
@@ -370,7 +371,7 @@ Amazon Managed Service for Grafana
 
 - CS連携の整備
     - サービス時間、SLAの策定
-    - Intercom他、ツール検討
+    - Intercom他、CSツール検討
 - 利用規約
 - セキュリティチェックシート
     - ホワイトペーパー作成
