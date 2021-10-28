@@ -339,7 +339,7 @@ layout: default-6
 ---
 
 # 開発秘話
-朝見てみたら、仮想ゲートウェイの起動失敗したタスクが500以上。。。。。
+朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
 - 原因は、アプリケーションのヘルスチェックエンドポイントのステータスが200でなかったこと
     - 通信経路は以下
         1. Route53ホストゾーン
@@ -358,7 +358,18 @@ layout: default-6
 
 # 開発秘話
 
-- http2
+http2対応できない
+
+- actix webのAPI群への通信をhttp2にしたかったので、[公式](https://actix.rs/docs/http2/)にしたがって鍵を用意し、appをhttp2対応させた
+- が、`upstream connect error or disconnect/reset before headers. reset reason: connection termination`というenvoyのエラーが出力される
+- awsサポート回答によると、↓とのこと
+    - [http2は、tls必須ではない](https://qiita.com/kitauji/items/3bf03533895251c93af2#httpsh2-%E3%81%A8-httph2c)
+    - envoyへの通信とenvoy app間のプロトコルは一致させなければならない。envoyへはhttp2、envoy app間はhttp1.1というのはできない。
+    - envoy app間をtls暗号化すると、app meshのコントロールプレーンが通信を補足できない
+    - appはtls暗号化せずhttp2対応しなくてはならない
+
+- 公式を見ても、tls暗号化せずにhttp2化する方法が見つからない。`actix-web automatically upgrades connections to HTTP/2 if possible.`と書いてはあるが、鍵を用意しないとactix webはhttp2にならなかった。
+- actix webをtls暗号化せずhttp2対応させる術が見つからず、app meshでのhttp2対応は諦めるという結論になった
 
 ---
 layout: default-6
