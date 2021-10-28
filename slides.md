@@ -14,7 +14,7 @@ drawings:
 ---
 layout: quote
 ---
-#
+# TODO
 
 <div class="titles"><div class="titlecontent">
 
@@ -211,8 +211,15 @@ layout: section-3
 | --- | --- |
 | <kbd>frontend</kbd> | SSRに対応 |
 | <kbd>backend</kbd> | DDD指向・オニオンアーキテクチャで実装、リソースAPIではトークン検証処理を行う |
-| <kbd>CI/CD</kbd> | [aws謹製のactions](https://github.com/aws-actions)で実装 |
+| <kbd>CI/CD</kbd> | [aws謹製のGithub Actions](https://github.com/aws-actions)で実装 |
 | <kbd>認証・認可</kbd> | OIDCに則って各APIを構築 ・ [Organizations](https://auth0.com/docs/organizations)機能を使用（予定） |
+
+---
+
+# 開発秘話
+
+TODO
+- 神谷さん、西坂さんに聞く
 
 ---
 layout: section-2
@@ -222,11 +229,13 @@ layout: section-2
 
 ---
 # 使用技術（Dockerfile未満）
+
 ## コンテナー・ネットワーク
 
 ---
 
 # 使用技術（Dockerfile未満）
+
 ## コンテナー・ネットワーク
 
 - AWS ECS on Fargate
@@ -266,7 +275,7 @@ layout: default-6
 
 ## [firelens](https://dev.classmethod.jp/articles/aws-fargate-with-firelens-minimum/)
 
-- awsのマネージドサービス用にカスタマイズされたfluent bit
+- awsがマネージドサービス用にカスタマイズしたfluent bit
 - log_routerコンテナーをサイドカー構成でecsタスクに同梱し、好きな場所にログ送信できる
     - envoyのアクセスログはs3、アプリケーションログはcloudwatch logs、アクセスログうち特定のIPだけkinesis data firehose経由でAmazon OpenSearchに、等
 - 試されるfluent bit力
@@ -274,17 +283,24 @@ layout: default-6
     - Datadogにも出力して、可視性・一覧性を追求する
 
 ---
-
 # 開発秘話
 
 - 今回の場合では、設定ファイル無しでfirelensを使える
-    - ブログを漁ると、fluent bitの設定ファイルが必要という記事ばかり出てくるが、管理コスト。。。
+    - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、fluent bitの設定ファイルが必要という記事ばかり出てくるが、管理コスト。。。
+       - s3に置く、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
+    - ログ出力先が一ヶ所の場合のみ、タスク定義に記載したオプションを設定値としてfluent bitに渡せる
+
+---
+# 開発秘話
+
+- 今回の場合では、設定ファイル無しでfirelensを使える
+    - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、fluent bitの設定ファイルが必要という記事ばかり出てくるが、管理コスト。。。
        - s3に置く、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
     - ログ出力先が一ヶ所の場合のみ、タスク定義に記載したオプションを設定値としてfluent bitに渡せる
 - log_routerコンテナー自体のログ（Cloudwatch Logs）にDataAlreadyAcceptedExceptionエラーが出力され続ける
     - `The given batch of log events has already been accepted. The next batch can be sent with sequenceToken`のメッセージが、ECSタスクがリクエストを受け付ける毎に記録される
     - [Cloudwatch LogsのsequenceTokenは被っていなかった](https://michimani.net/post/use-cloudwatch-via-aws-cli/)
-    - 原因は、log_routerコンテナーのデフォ値と自分で設定した値の競合だった
+    - 原因は、log_routerコンテナーのデフォルト値と自分で設定した値の競合だった
         - aws製fluent bitコンテナーは、[このような値](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/firelens-taskdef.html)を無条件設定する
         - [fluent bit公式](https://docs.fluentbit.io/manual/pipeline/outputs/cloudwatch)を参考に、タスク定義のlogConfigurationで`"Match": "*"` を設定した
         - Matchパラメーターが複数設定され、ログの二重送信をCloudWatch Logsが拒否した結果、DataAlreadyAcceptedExceptionエラーが発生していた
@@ -323,6 +339,26 @@ layout: default-6
 ---
 
 # 開発秘話
+朝見てみたら、仮想ゲートウェイの起動失敗したタスクが500以上。。。。。
+- 原因は、アプリケーションのヘルスチェックエンドポイントのステータスが200でなかったこと
+    - 通信経路は以下
+        1. Route53ホストゾーン
+        2. ALB
+        3. ターゲットグループ
+        4. 仮想ゲートウェイのenvoyコンテナー
+        5. 仮想サービス、仮想ルーター
+        6. 仮想ノードのenvoyコンテナー
+        7. 仮想ノードのappコンテナー
+    - mesh内通信でステータスコードは書き換えられない=3が受け取るステータスコードは7のもの
+        - 3のヘルスチェックに失敗するため、4にSIGTERMが送信される
+        - タスクにつき1コンテナーの起動だったため、4が停止してタスク数が0になる
+        - ECSサービスで最低タスク数を1と設定したため、新たなタスクが立ち上がる
+    - **無限ループ**
+---
+
+# 開発秘話
+
+- http2
 
 ---
 layout: default-6
