@@ -182,6 +182,7 @@ layout: section-2
         <p>JIRAのように扱うため、labelで機能補完</p>
         <p>closed, blocked by等、チケット間の関係性を表現</p>
         <p>sortが奇麗になるよう、bug, enhance等の接頭辞を付与</p>
+        <p>色の並びにも気を配った</p>
     </div>
     <img src="github_labels.png" width="370">
 </div>
