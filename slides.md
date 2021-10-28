@@ -11,9 +11,6 @@ drawings:
 
 # ユーザ管理画面開発説明
 
-<!--
-コメント書く
--->
 ---
 layout: quote
 ---
@@ -81,6 +78,18 @@ layout: quote
     pointer-events: none;
  }
 </style>
+
+---
+layout: default-5
+---
+
+# 目次
+
+- サービス概要
+- 開発の進め方
+- 使用技術（Dockerfile以上）
+- 使用技術（Dockerfile未満）
+- 今後
 
 ---
 layout: section-2
@@ -181,7 +190,7 @@ layout: section-2
 layout: section-3
 ---
 
-# 使用技術（Dockerfile以上）
+# 使用技術<br/>（Dockerfile以上）
 ---
 
 # 使用技術（Dockerfile以上）
@@ -205,10 +214,10 @@ layout: section-3
 | <kbd>認証・認可</kbd> | OIDCに則って各APIを構築 ・ [Organizations](https://auth0.com/docs/organizations)機能を使用（予定） |
 
 ---
-layout: section-3
+layout: section-2
 ---
 
-# 使用技術（Dockerfile未満）
+# 使用技術<br/>（Dockerfile未満）
 
 ---
 # 使用技術（Dockerfile未満）
@@ -320,10 +329,10 @@ layout: default-6
 - app
 
 ---
-layout: section-3
+layout: section-2
 ---
 
-# 使用技術（Dockerfile未満）<br/><br/>まだあるよ
+# 使用技術<br/>（Dockerfile未満）<br/>まだあるよ
 
 ---
 
