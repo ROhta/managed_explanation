@@ -132,16 +132,56 @@ layout: section-2
 
 ---
 
-# 開発の進め方
+# [GitHub Beta Projects](https://github.com/features/issues/)で管理
 
-## GitHub Beta Projectで管理
+<div grid="~ cols-2 gap-2" m="-t-2">
+    <div>
+        <p>Discussions → Issues → Pull Requests の流れが最高</p>
+        <p>Discussions<br/>とりあえずの提案・バグか仕様か分からないので質問</p>
+        <p>Issues<br/>やることが決定したもの</p>
+        <p>Pull Requests<br/>実装のレビュー</p>
+        <p>IssuesやPull Requestsはテンプレートを設置</p>
+        <p>Issuesはボタン一つでテンプレートを使い分けられるように</p>
+    </div>
+    <div>
+        <img src="github_discussions.png" width= "500">
+        <br/>
+        <img src="github_issue_template.png" width= "500">
+    </div>
+</div>
+
+---
+
+# [GitHub Beta Projects](https://github.com/features/issues/)で管理
+
+<div grid="~ cols-2 gap-2" m="-t-2">
+    <div>
+        <p>複数リポジトリのIssueを一覧化</p>
+        <p>各マイクロサービスのリポジトリを一つ一つ見に行く必要がない</p>
+        <p>カスタムフィールドでPriorityを追加</p>
+        <p>Priority毎にグループ分けして表示</p>
+    </div>
+    <img src="github_project.png" width= "500">
+</div>
+
+---
+
+# [GitHub Beta Projects](https://github.com/features/issues/)で管理
+
+<div grid="~ cols-2 gap-2" m="-t-2">
+    <div>
+        <p>JIRAのように扱うため、labelで機能補完</p>
+        <p>closed, blocked by等、チケット間の関係性を表現</p>
+        <p>sortが奇麗になるよう、bug, enhance等の接頭辞を付与</p>
+    </div>
+    <img src="github_labels.png" width="370">
+</div>
 
 ---
 layout: section-3
 ---
 
 # 使用技術（Dockerfile以上）
-
 ---
 
 # 使用技術（Dockerfile以上）
