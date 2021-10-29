@@ -320,11 +320,16 @@ src: ./slides/virtual_resources.md
 - AWSマネジメントコンソールでタスク定義を作成する際、App Mesh統合の有効化にチェックを入れると、App Meshで用いるenvoyイメージや必要な設定が自動挿入される
     - 東京リージョンで自動設定されるイメージは`840364872350.dkr.ecr.ap-northeast-1.amazonaws.com/aws-appmesh-envoy:v1.19.1.0-prod`だった
     - 挿入される情報の1つにコンテナー環境変数`APPMESH_VIRTUAL_NODE_NAME`があった
-- [公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、イメージバージョン1.15.0は、環境変数`APPMESH_RESOURCE_ARN`を用いなければならない
-    - バージョン1.19.1のイメージで`APPMESH_VIRTUAL_NODE_NAME`を追加すると、挙動が不安定になる
-       - envoyからappへの通信がconnection errorとなった
-- App Mesh統合の有効化にチェックを入れた時点で、環境変数`APPMESH_VIRTUAL_NODE_NAME`をすると、エラーが出てタスク定義の保存に失敗する
-    - App Mesh統合の有効化にチェックを外したうえで、タスク定義のJSONを手で書くしかなかった
+
+<v-click>
+
+- だが、[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、イメージバージョン1.15.0以上は、環境変数`APPMESH_RESOURCE_ARN`を用いなければならない
+    - バージョン1.19.1のイメージに`APPMESH_VIRTUAL_NODE_NAME`を追加すると、挙動が不安定になった
+       - `APPMESH_VIRTUAL_NODE_NAME`と`APPMESH_RESOURCE_ARN`を両方追加すると、envoyからappへの通信がconnection errorとなった
+- しかも、App Mesh統合の有効化にチェックを入れたとき、環境変数`APPMESH_VIRTUAL_NODE_NAME`を削除すると、エラーが出てタスク定義の保存に失敗する
+    - App Mesh統合の有効化のチェックを外したうえで、`APPMESH_RESOURCE_ARN`のみが追加されるように、タスク定義のJSONを手で書くしかなかった
+
+</v-click>
 
 ---
 
@@ -332,20 +337,30 @@ src: ./slides/virtual_resources.md
 
 朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
 
-- 原因は、アプリケーションのヘルスチェックエンドポイントのステータスが200でなかったこと
-    - 通信経路は以下
-        1. Route53ホストゾーン
-        2. ALB
-        3. ターゲットグループ
-        4. 仮想ゲートウェイのenvoyコンテナー
-        5. 仮想サービス、仮想ルーター
-        6. 仮想ノードのenvoyコンテナー
-        7. 仮想ノードのappコンテナー
-    - mesh内通信でステータスコードは書き換えられない <typcn-equals /> 3が受け取るステータスコードは7のもの
-        - 3のヘルスチェックに失敗するため、4にSIGTERMが送信される
-        - タスクにつき1コンテナーの起動だったため、4が停止してタスク数が0になる
-        - ECSサービスで最低タスク数を1と設定したため、新たなタスクが立ち上がる
-    - **無限ループ**
+- 原因は、アプリケーションのヘルスチェックエンドポイントのステータスが200でなかったこと。通信経路は以下。
+    1. Route53ホストゾーン
+    2. ALB
+    3. ターゲットグループ
+    4. 仮想ゲートウェイのenvoyコンテナー
+    5. 仮想サービス、仮想ルーター
+    6. 仮想ノードのenvoyコンテナー
+    7. 仮想ノードのappコンテナー
+
+<v-click>
+
+- mesh内通信でステータスコードは書き換えられない <typcn-equals /> 3が受け取るステータスコードは7のもの
+    - 3のヘルスチェックに失敗するため、4にSIGTERMが送信される
+    - タスクにつき1コンテナーの起動だったため、4が停止してタスク数が0になる
+    - ECSサービスで最低タスク数を1と設定したため、新たなタスクが立ち上がる
+
+</v-click>
+
+<v-click>
+
+**無限ループ**
+
+</v-click>
+
 ---
 
 # 開発秘話
@@ -354,14 +369,24 @@ http2対応できない
 
 - actix webのAPI群への通信をhttp2にしたかったので、[公式](https://actix.rs/docs/http2/)にしたがって鍵を用意し、appをhttp2対応させた
 - が、`upstream connect error or disconnect/reset before headers. reset reason: connection termination`というenvoyのエラーが出力される
+
+<v-click>
+
 - awsサポート回答によると、↓とのこと
     - [http2は、tls必須ではない](https://qiita.com/kitauji/items/3bf03533895251c93af2#httpsh2-%E3%81%A8-httph2c)
     - envoyへの通信とenvoy app間のプロトコルは一致させなければならない。envoyへはhttp2、envoy app間はhttp1.1というのはできない。
     - envoy app間をtls暗号化すると、app meshのコントロールプレーンが通信を補足できない
     - appはtls暗号化せずhttp2対応しなくてはならない
 
+</v-click>
+
+
+<v-click>
+
 - 公式を見ても、tls暗号化せずにhttp2化する方法が見つからない。`actix-web automatically upgrades connections to HTTP/2 if possible.`と書いてはあるが、鍵を用意しないとactix webはhttp2にならなかった。
 - actix webをtls暗号化せずhttp2対応させる術が見つからず、app meshでのhttp2対応は諦めるという結論になった
+
+</v-click>
 
 ---
 src: ./slides/virtual_resources.md
@@ -439,14 +464,14 @@ layout: section-2
 ## セキュリティ
 
 - AWS Config
-- AWS Organizations
+- AWS Control Tower
+    - AWS Organizations
     - AWS WAF
     - AWS Shield
     - AWS Firewall Manager
 - AWS Guard Duty
 - AWS Macie
 - AWS KMSをきちんと管理
-    - 鍵有効期限の管理
 - AWS IAMをきちんと管理
     - きちんとIAMグループ作ってポリシー割当
     - 各IAMユーザにパーミッションバウンダリを設定
@@ -465,7 +490,7 @@ layout: default-6
 
 ## セキュリティ対策も追加
 
-<img src="/img/add_security_resources.svg" width="600">
+<img src="/img/add_security_resources.svg" width="560">
 
 ---
 layout: default-6
@@ -473,7 +498,7 @@ layout: default-6
 
 ## dev環境のみの構成
 
-<img src="/img/dev_environment.svg" width="500">
+<img src="/img/dev_environment.svg" width="460">
 
 ---
 
