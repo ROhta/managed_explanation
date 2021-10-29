@@ -439,7 +439,8 @@ layout: section-2
 ## セキュリティ
 
 - AWS Config
-- AWS Organizations
+- AWS Control Tower
+    - AWS Organizations
     - AWS WAF
     - AWS Shield
     - AWS Firewall Manager
@@ -465,7 +466,7 @@ layout: default-6
 
 ## セキュリティ対策も追加
 
-<img src="/img/add_security_resources.svg" width="600">
+<img src="/img/add_security_resources.svg" width="560">
 
 ---
 layout: default-6
@@ -473,7 +474,7 @@ layout: default-6
 
 ## dev環境のみの構成
 
-<img src="/img/dev_environment.svg" width="500">
+<img src="/img/dev_environment.svg" width="460">
 
 ---
 
