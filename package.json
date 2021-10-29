@@ -18,5 +18,11 @@
     "@slidev/cli": "^0.27.8",
     "@slidev/theme-shibainu": "^0.0.2",
     "playwright-chromium": "^1.16.2"
+  },
+  "devDependencies": {
+    "@iconify-json/bi": "^1.0.6",
+    "@iconify-json/twemoji": "^1.0.2",
+    "@iconify-json/typcn": "^1.0.1",
+    "@iconify-json/uim": "^1.0.2"
   }
 }
