@@ -250,13 +250,7 @@ layout: section-2
   - mTLS有効化
 
 ---
-layout: default-6
----
-
-# 実体リソース
-
-<img src="/img/real_resources.svg" width="600">
-
+src: ./slides/real_resources.md
 ---
 
 # ログ設計
@@ -309,21 +303,11 @@ layout: default-6
     - AWSサポートに問い合わせて、解決まで2か月かかった。。。
 
 ---
-layout: default-6
+src: ./slides/real_resources.md
 ---
 
-# 実体リソース
-
-<img src="/img/real_resources.svg" width="600">
-
 ---
-layout: default-6
----
-
-# 仮想リソース
-
-<img src="/img/virtual_resources.svg" width="600">
-
+src: ./slides/virtual_resources.md
 ---
 
 # サービスメッシュ
@@ -391,13 +375,7 @@ http2対応できない
 - actix webをtls暗号化せずhttp2対応させる術が見つからず、app meshでのhttp2対応は諦めるという結論になった
 
 ---
-layout: default-6
----
-
-# 仮想リソース
-
-<img src="/img/virtual_resources.svg" width="600">
-
+src: ./slides/virtual_resources.md
 ---
 layout: default-5
 ---
@@ -465,12 +443,8 @@ layout: section-2
 - [AWS BudgetsをChatbotでSlackに通知させてる](https://dev.classmethod.jp/articles/aws-budgets-alert-by-aws-chatbot/)
 
 ---
-layout: default-6
+src: ./slides/real_resources.md
 ---
-
-# 実体リソース
-
-<img src="/img/real_resources.svg" width="600">
 
 ---
 layout: default-6
