@@ -10,7 +10,7 @@
     "url": "https://github.com/ROhta/managed_explanation"
   },
   "scripts": {
-    "build": "slidev build -- slides.md",
+    "build": "npm run build -- --base slidev-example/",
     "dev": "slidev --open",
     "export": "slidev export"
   },
