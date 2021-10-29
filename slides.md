@@ -153,9 +153,9 @@ layout: section-2
         <p>Issuesはボタン一つでテンプレートを使い分けられるように</p>
     </div>
     <div>
-        <img src="/github_discussions.png" width= "500">
+        <img src="/img/github_discussions.png" width= "500">
         <br/>
-        <img src="/github_issue_template.png" width= "500">
+        <img src="/img/github_issue_template.png" width= "500">
     </div>
 </div>
 
@@ -170,7 +170,7 @@ layout: section-2
         <p>カスタムフィールドでPriorityを追加</p>
         <p>Priority毎にグループ分けして表示</p>
     </div>
-    <img src="/github_project.png" width= "500">
+    <img src="/img/github_project.png" width= "500">
 </div>
 
 ---
@@ -184,7 +184,7 @@ layout: section-2
         <p>sortが奇麗になるよう、bug, enhance等の接頭辞を付与</p>
         <p>色の並びにも気を配った</p>
     </div>
-    <img src="/github_labels.png" width="370">
+    <img src="/img/github_labels.png" width="370">
 </div>
 
 ---
@@ -198,10 +198,10 @@ layout: section-3
 
 |     |     |
 | --- | --- |
-| <kbd>frontend</kbd> | <img src="/typescript.svg" width="70" class="inline-block p-4"><img src="/react.svg" width="150" class="inline-block p-4"><img src="/next.js.svg" width="100" class="inline-block p-4"><img src="/material_ui.svg" width="180" class="inline-block p-4"><img src="/vite.svg" width="100" class="inline-block p-4"> |
-| <kbd>backend</kbd> | <img src="/rust.svg" width="80" class="inline-block p-4"><img src="/actixweb.jpg" width="150" class="inline-block p-4"> |
-| <kbd>CI/CD</kbd> | <img src="/github_actions.svg" width="100"> |
-| <kbd>認証・認可</kbd> | <img src="/auth0.svg" width="100"> |
+| <kbd>frontend</kbd> | <img src="/img/typescript.svg" width="70" class="inline-block p-4"><img src="/img/react.svg" width="150" class="inline-block p-4"><img src="/img/next.js.svg" width="100" class="inline-block p-4"><img src="/img/material_ui.svg" width="180" class="inline-block p-4"><img src="/img/vite.svg" width="100" class="inline-block p-4"> |
+| <kbd>backend</kbd> | <img src="/img/rust.svg" width="80" class="inline-block p-4"><img src="/img/actixweb.jpg" width="150" class="inline-block p-4"> |
+| <kbd>CI/CD</kbd> | <img src="/img/github_actions.svg" width="100"> |
+| <kbd>認証・認可</kbd> | <img src="/img/auth0.svg" width="100"> |
 
 ---
 
@@ -255,7 +255,7 @@ layout: default-6
 
 # 実体リソース
 
-<img src="/real_resources.svg" width="600">
+<img src="/img/real_resources.svg" width="600">
 
 ---
 
@@ -314,7 +314,7 @@ layout: default-6
 
 # 実体リソース
 
-<img src="/real_resources.svg" width="600">
+<img src="/img/real_resources.svg" width="600">
 
 ---
 layout: default-6
@@ -322,7 +322,7 @@ layout: default-6
 
 # 仮想リソース
 
-<img src="/virtual_resources.svg" width="600">
+<img src="/img/virtual_resources.svg" width="600">
 
 ---
 
@@ -396,7 +396,7 @@ layout: default-6
 
 # 仮想リソース
 
-<img src="/virtual_resources.svg" width="600">
+<img src="/img/virtual_resources.svg" width="600">
 
 ---
 layout: default-5
@@ -470,7 +470,7 @@ layout: default-6
 
 # 実体リソース
 
-<img src="/real_resources.svg" width="600">
+<img src="/img/real_resources.svg" width="600">
 
 ---
 layout: default-6
@@ -478,7 +478,7 @@ layout: default-6
 
 ## セキュリティ対策も追加
 
-<img src="/add_security_resources.svg" width="600">
+<img src="/img/add_security_resources.svg" width="600">
 
 ---
 layout: default-6
@@ -486,7 +486,7 @@ layout: default-6
 
 ## dev環境のみの構成
 
-<img src="/dev_environment.svg" width="500">
+<img src="/img/dev_environment.svg" width="500">
 
 ---
 
@@ -563,7 +563,7 @@ layout: default-7
 
 # 今後
 
-<img src="/tegamawaranai.jpg" width="450">
+<img src="/img/tegamawaranai.jpg" width="450">
 
 ---
 layout: default-7
@@ -572,7 +572,7 @@ layout: default-7
 #
 
 <div grid="~ cols-2 gap-2" m="-t-2">
-<img src="/tegatarinai.jpg">
+<img src="/img/tegatarinai.jpg">
 </div>
 
 ---
@@ -583,6 +583,6 @@ layout: default-7
 #
 
 <div grid="~ cols-2 gap-2" m="-t-2">
-<img src="/tegatarinai.jpg">
-<img src="/yoroshiku.jpg" width="380">
+<img src="/img/tegatarinai.jpg">
+<img src="/img/yoroshiku.jpg" width="380">
 </div>
