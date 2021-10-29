@@ -9,12 +9,12 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v2.4.1
         with:
-          node-version: '16'
+          node-version: '14'
       - name: Install dependencies
         run: npm install
       - name: Build
         run: npm run build
-      - name: GitHub Pages
+      - name: Deploy
         uses: crazy-max/ghaction-github-pages@v2.5.0
         with:
           target_branch: gh-pages
