@@ -6,7 +6,7 @@ lineNumbers: true
 info: |
   ## 開発説明
 drawings:
-  persist: true
+  persist: false
 ---
 
 # ユーザ管理画面開発説明
@@ -105,16 +105,11 @@ layout: section-2
     - ユーザ・企業・接続元IPリストのCRUDをする
     - ユーザを作る権限を持った企業外ユーザ（販売代理店等）を管理する
 
----
-
-# サ－ビス概要
-
- - 機能要件
-    - ユーザ・企業・接続元IPリストのCRUDをする
-    - ユーザを作る権限を持った企業外ユーザ（販売代理店等）を管理する
+<v-click>
 
 機能要件だけ見るとチュートリアルに毛が生えた程度
 
+</v-click>
 ---
 
 # サ－ビス概要
@@ -143,7 +138,7 @@ layout: section-2
 
 # [GitHub Beta Projects](https://github.com/features/issues/)で管理
 
-<div grid="~ cols-2 gap-2" m="-t-2">
+<div class="grid grid-cols-[50%,50%] gap-4">
     <div>
         <p>Discussions <bi-arrow-right-square-fill /> Issues <bi-arrow-right-square-fill /> Pull Requests の流れが最高</p>
         <p>Discussions<br/>とりあえずの提案・バグか仕様か分からないので質問、等</p>
@@ -163,7 +158,7 @@ layout: section-2
 
 # [GitHub Beta Projects](https://github.com/features/issues/)で管理
 
-<div grid="~ cols-2 gap-2" m="-t-2">
+<div class="grid grid-cols-[50%,50%] gap-4">
     <div>
         <p>複数リポジトリのIssuesを一覧化</p>
         <p>各マイクロサービスのリポジトリを一つ一つ見に行く必要がない</p>
@@ -177,7 +172,7 @@ layout: section-2
 
 # [GitHub Beta Projects](https://github.com/features/issues/)で管理
 
-<div grid="~ cols-2 gap-2" m="-t-2">
+<div class="grid grid-cols-[50%,50%] gap-4">
     <div>
         <p>JIRAのように扱うため、labelsで機能補完</p>
         <p>closed, blocked by等、チケット間の関係性を表現</p>
@@ -188,7 +183,7 @@ layout: section-2
 </div>
 
 ---
-layout: section-3
+layout: section-2
 ---
 
 # 使用技術<br/>（Dockerfile以上）
@@ -252,13 +247,6 @@ layout: section-2
 ---
 src: ./slides/real_resources.md
 ---
-
-# ログ設計
-
-- リクエストの流れを追いやすい設計にする
-    - 1つのリクエストに対して、全ノードのログを一ヶ所で見たい
-    - frontendのロググループを見て、次はbackendのログを見て、というログ設計はやめる
-
 ---
 
 # ログ設計
@@ -266,6 +254,8 @@ src: ./slides/real_resources.md
 - リクエストの流れを追いやすい設計にする
     - 1つのリクエストに対して、全ノードのログを一ヶ所で見たい
     - frontendのロググループを見て、次はbackendのログを見て、というログ設計はやめる
+
+<v-click>
 
 ## [firelens](https://dev.classmethod.jp/articles/aws-fargate-with-firelens-minimum/)
 
@@ -276,14 +266,7 @@ src: ./slides/real_resources.md
     - 全ログをとりあえずcloudwatch logsに出力中
     - Datadogにも出力して、可視性・一覧性を追求する
 
----
-
-# 開発秘話
-
-- 今回の場合では、設定ファイル無しでfirelensを使える
-    - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、fluent bitの設定ファイルが必要という記事ばかり出てくるが、管理コスト。。。
-       - s3に置く、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
-    - ログ出力先が一ヶ所の場合のみ、タスク定義に記載したオプションを設定値としてfluent bitに渡せる
+</v-click>
 
 ---
 
@@ -293,6 +276,9 @@ src: ./slides/real_resources.md
     - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、fluent bitの設定ファイルが必要という記事ばかり出てくるが、管理コスト。。。
        - s3に置く、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
     - ログ出力先が一ヶ所の場合のみ、タスク定義に記載したオプションを設定値としてfluent bitに渡せる
+
+<v-click>
+
 - log_routerコンテナー自体のログ（Cloudwatch Logs）にDataAlreadyAcceptedExceptionエラーが出力され続ける
     - `The given batch of log events has already been accepted. The next batch can be sent with sequenceToken`のメッセージが、ECSタスクがリクエストを受け付ける毎に記録される
     - [Cloudwatch LogsのsequenceTokenは被っていなかった](https://michimani.net/post/use-cloudwatch-via-aws-cli/)
@@ -302,12 +288,15 @@ src: ./slides/real_resources.md
         - Matchパラメーターが複数設定され、ログの二重送信をCloudWatch Logsが拒否した結果、DataAlreadyAcceptedExceptionエラーが発生していた
     - AWSサポートに問い合わせて、解決まで2か月かかった。。。
 
+</v-click>
+
 ---
 src: ./slides/real_resources.md
 ---
-
 ---
 src: ./slides/virtual_resources.md
+---
+
 ---
 
 # サービスメッシュ
@@ -388,9 +377,17 @@ layout: default-5
     - datadog agent（予定）
     - app
 
+<v-click>
+
 - 管理するコンテナーはappだけ
     - 仮想ゲートウェイのタスクはappコンテナー無し
+
+</v-click>
+<v-click>
+
 - ecs execで各コンテナー内にssmできるよう設定済み
+
+</v-click>
 
 ---
 layout: section-2
@@ -418,13 +415,26 @@ layout: section-2
         - **AWSアカウント自体の管理**
 
 ---
-# 使用技術（Dockerfile未満）
-
-## セキュリティ
-
----
 
 # 使用技術（Dockerfile未満）
+
+<div class="grid grid-cols-[50%,50%] gap-4"><div>
+
+## コンテナー・ネットワーク
+
+- AWS ECS on Fargate
+- AWS ECR
+- AWS Application Load Balancer
+- AWS Firelens
+- AWS Cloudwatch Logs
+- AWS Cloud Map
+- AWS Route53
+    - DNS SEC署名有効化
+- AWS App Mesh
+  - mTLS有効化
+
+</div>
+<v-click><div>
 
 ## セキュリティ
 
@@ -441,6 +451,9 @@ layout: section-2
     - きちんとIAMグループ作ってポリシー割当
     - 各IAMユーザにパーミッションバウンダリを設定
 - [AWS BudgetsをChatbotでSlackに通知させてる](https://dev.classmethod.jp/articles/aws-budgets-alert-by-aws-chatbot/)
+
+</div></v-click>
+</div>
 
 ---
 src: ./slides/real_resources.md
@@ -489,7 +502,11 @@ Amazon Managed Service for Prometheus
 Amazon Managed Service for Grafana
 ```
 
+<v-click>
+
 # **Datadog頑張る**
+
+</v-click>
 
 ---
 layout: section-2
@@ -500,6 +517,8 @@ layout: section-2
 ---
 
 # 今後
+
+<div class="grid grid-cols-[50%,50%] gap-4"><div>
 
 ## システム面
 
@@ -517,9 +536,8 @@ layout: section-2
 - カオスエンジニアリング
     - AWS FIS or Gremlin
 
----
-
-# 今後
+</div>
+<v-click><div>
 
 ## サービス面
 
@@ -530,6 +548,9 @@ layout: section-2
 - セキュリティチェックシート
     - ホワイトペーパー作成
     - 静的サイト作成
+
+</div></v-click>
+</div>
 
 ---
 layout: default-7
@@ -545,18 +566,7 @@ layout: default-7
 
 #
 
-<div grid="~ cols-2 gap-2" m="-t-2">
+<div class="grid grid-cols-[50%,50%] gap-4">
 <img src="/img/tegatarinai.jpg">
-</div>
-
----
-layout: default-7
----
-
-
-#
-
-<div grid="~ cols-2 gap-2" m="-t-2">
-<img src="/img/tegatarinai.jpg">
-<img src="/img/yoroshiku.jpg" width="380">
+<v-click><img src="/img/yoroshiku.jpg" width="380"></v-click>
 </div>
