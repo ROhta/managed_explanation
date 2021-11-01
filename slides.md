@@ -234,7 +234,10 @@ layout: section-2
 ## コンテナー・ネットワーク
 
 - AWS ECS on Fargate
+    - キャパシティープロバイダー戦略を設定し、FARGATE_SPOTを最大限使用
 - AWS ECR
+    - イメージスキャン
+    - ライフサイクルポリシー設定
 - AWS Application Load Balancer
 - AWS Firelens
 - AWS Cloudwatch Logs
@@ -448,7 +451,10 @@ layout: section-2
 ## コンテナー・ネットワーク
 
 - AWS ECS on Fargate
+    - キャパシティープロバイダー戦略を設定し、FARGATE_SPOTを最大限使用
 - AWS ECR
+    - イメージスキャン
+    - ライフサイクルポリシー設定
 - AWS Application Load Balancer
 - AWS Firelens
 - AWS Cloudwatch Logs
@@ -475,7 +481,7 @@ layout: section-2
 - AWS IAMをきちんと管理
     - きちんとIAMグループ作ってポリシー割当
     - 各IAMユーザにパーミッションバウンダリを設定
-- [AWS BudgetsをChatbotでSlackに通知させてる](https://dev.classmethod.jp/articles/aws-budgets-alert-by-aws-chatbot/)
+- [AWS BudgetsをChatbotでSlackに通知](https://dev.classmethod.jp/articles/aws-budgets-alert-by-aws-chatbot/)
 
 </div></v-click>
 </div>
