@@ -138,7 +138,7 @@ layout: section-2
 
 # [GitHub Beta Projects](https://github.com/features/issues/)で管理
 
-<div class="grid grid-cols-[50%,50%] gap-4">
+<div class="grid grid-cols-[46%,54%] gap-4">
     <div>
         <p>Discussions <bi-arrow-right-square-fill /> Issues <bi-arrow-right-square-fill /> Pull Requests の流れが最高</p>
         <p>Discussions<br/>とりあえずの提案・バグか仕様か分からないので質問、等</p>
@@ -158,14 +158,14 @@ layout: section-2
 
 # [GitHub Beta Projects](https://github.com/features/issues/)で管理
 
-<div class="grid grid-cols-[50%,50%] gap-4">
+<div class="grid grid-cols-[27%,73%] gap-4">
     <div>
         <p>複数リポジトリのIssuesを一覧化</p>
         <p>各マイクロサービスのリポジトリを一つ一つ見に行く必要がない</p>
         <p>カスタムフィールドでPriorityを追加</p>
         <p>Priority毎にグループ分けして表示</p>
     </div>
-    <img src="/img/github_project.png" width= "500">
+    <img src="/img/github_project.png" width= "600">
 </div>
 
 ---
