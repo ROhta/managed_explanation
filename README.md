@@ -1,1 +1,1 @@
-# ユーザー管理画面説明
+# [web page](https://rohta.github.io/managed_explanation/)
