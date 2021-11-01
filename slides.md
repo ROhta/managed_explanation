@@ -4,7 +4,7 @@ class: 'text-center'
 highlighter: prism
 lineNumbers: true
 info: |
-  ## 開発説明
+ # ユーザ管理画面開発
 drawings:
   persist: false
 ---
