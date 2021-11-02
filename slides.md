@@ -222,7 +222,7 @@ frontend
 
 backend
 
-- アプリケーションレイヤーでもセキュリティを高める必要があり、 <img src="/img/rust.svg" width="80" class="inline-block p-4">採用。
+- アプリケーションレイヤーでもセキュリティを高める必要があり、<img src="/img/rust.svg" width="80" class="inline-block p-4">採用。
     - 異様に強い型制約、メモリ安全が魅力。
     - ロギング、トークン検証処理等をモジュール化し、アスペクト指向プログラミングを実施。
 
@@ -260,6 +260,14 @@ backend
     - トークン検証はアプリケーションサービス層。
         - エンドポイント毎に検証スコープの範囲が違うため、ビジネスロジックにも思える
         - アプリケーション固有の処理だが、ドメインに関する処理ではないので、アプリケーションサービス層に配置した。
+
+</v-click>
+
+<v-click>
+
+- 型制約が激しくてDIが辛い。。。
+    - [goでinterface型を使う](https://qiita.com/hirotakan/items/698c1f5773a3cca6193e#interfacesdatabase--frameworks--drivers%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC)ような逃げ道がない。
+    - 依存関係を逆転しきれないことも。
 
 </v-click>
 
