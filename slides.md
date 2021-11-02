@@ -14,69 +14,65 @@ drawings:
 ---
 layout: quote
 ---
-# TODO
-
-<div class="titles"><div class="titlecontent">
-
- <p class="center">EPISODE IV<br />A NEW HOPE FOR CSS3</p>
-
- <p>It is a period of vendor war.</p>
-
- <p>This is a demonstration of Star Wars-style scrolling 3D titles in CSS3. It possibly has no practical purpose whatsoever but it looks great and you can impress your friends.</p>
-
- <p>Before movie-buffs start ranting, I realize Star Wars wasn't the first to use crawling 3D titles, but few of you will remember the Flash Gordon series or the 1936 adaption of HG Wells' "Things to Come".</p>
-
- <p>Also, by mentioning "Star Wars", everyone will understand what I mean. And I'll receive several thousand more visits.</p>
-
- <p>The scrolling titles work well in Chrome, Safari and Firefox. Opera doesn't implement 3D transforms yet, but the text will scroll. IE users receive a blank page. A shame, but IE10 should support it.</p>
-
- <p>So how does it work? Well, it's fairly simple. We have an outer absolute DIV (#titles) which is rotated along the X-axis using perspective to give the impression of depth. The same DIV also has an :after psuedo-element which applies a linear gradient so the text appears to fade out.</p>
-
- <p>Inside, we have another absolutely-positioned DIV which contains the text (#titlecontent). The top is set to 100% to ensure it starts off-screen then uses CSS3 animation to move it upward over time. No JavaScript is required.</p>
-
- <p>You will probably need to adjust the movement amount and timing depending on the quantity of text you want to show. The 3D depth can also be tweaked in the</p>
-
- <p>All the code is contained in this single HTML file</p>
-
- <p class="center">View the source, Luke!</p>
-
- <p>Sorry. Couldn't resist it.</p>
-
- <p>You're welcome to use this demonstration code in your own sites. Please link back to the original article at:</p>
-
- <p class="center"><a href="http://www.sitepoint.com/css3-starwars-scrolling-text/">sitepoint.com/<br />css3-starwars-scrolling-text/</a></p>
-
- <p>and give me a shout on Twitter <a href="http://twitter.com/craigbuckler">@craigbuckler</a> &ndash; I'd love to see how you use and abuse it!</p>
-
- <p>Finally, Han shot first and the original, unadulterated movies remain the best. Stop fiddling with them, George!</p>
-
-</div></div>
+<div id="contents">
+<div id="stars"></div>
+<div id="stars2"></div>
+<div id="stars3"></div>
+<div id="content">
+    <p>EPISODE 8</p>
+    <p>a long time ago in a galaxy far far away</p>
+    <p>
+    The Republic is crumbling under attacks <br />by the ruthless Sith Lord,
+    Count Dooku.
+    </p>
+    <p>
+    The FIRST ORDER reigns. Having decimated <br />the peaceful Republic,
+    Supreme Leader Snoke<br />
+    now deploys the merciless legions <br />to seize military controlof the
+    galaxy.
+    </p>
+</div>
+</div>
 
 <style>
- .titles {
-    position: absolute;
-    width: 18em;
-    height: 50em;
-    bottom: 0;
-    left: 50%;
-    margin-left: -9em;
-    font-size: 350%;
-    font-weight: bold;
-    text-align: justify;
-    overflow: hidden;
-    transform-origin: 50% 100%;
-    transform: perspective(300px) rotateX(25deg);
- }
- .titles:after {
-    position: absolute;
-    content: ' ';
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 60%;
-    background-image: linear-gradient(top, rgba(0,0,0,1) 0%, transparent 100%);
-    pointer-events: none;
- }
+#contents {
+  height: 100%;
+  overflow: hidden;
+  background: #090a0f;
+}
+
+#content {
+  position: absolute;
+  color: #ffff70;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 40px;
+
+}
+
+#stars {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  transform: perspective(100px) rotateX(10deg);
+  animation: star 50s linear infinite;
+  box-shadow: 779px 1331px #fff, 324px 42px #fff, 303px 586px #fff,
+    1312px 276px #fff, 451px 625px #fff, 521px 1931px #fff, 1087px 1871px #fff,
+    36px 1546px #fff, 132px 934px #fff, 1698px 901px #fff, 1418px 664px #fff,
+    1448px 1157px #fff,
+
+                         ...
+
+
+@keyframes star {
+  from {
+    transform: translateY(0px);
+  }
+  to {
+    transform: translateY(-2000px);
+  }
+}
 </style>
 
 ---
@@ -101,7 +97,7 @@ layout: section-2
 
 # サ－ビス概要
 
- - 機能要件
+- 機能要件
     - ユーザ・企業・接続元IPリストのCRUDをする
     - ユーザを作る権限を持った企業外ユーザ（販売代理店等）を管理する
 
@@ -193,7 +189,7 @@ layout: section-2
 
 |     |     |
 | --- | --- |
-| <kbd>frontend</kbd> | <img src="/img/typescript.svg" width="70" class="inline-block p-4"><img src="/img/react.svg" width="150" class="inline-block p-4"><img src="/img/next.js.svg" width="100" class="inline-block p-4"><img src="/img/material_ui.svg" width="180" class="inline-block p-4"><img src="/img/vite.svg" width="100" class="inline-block p-4"> |
+| <kbd>frontend</kbd> | <img src="/img/typescript.svg" width="70" class="inline-block p-4"><img src="/img/next.js.svg" width="100" class="inline-block p-4"><img src="/img/material_ui.svg" width="160" class="inline-block p-4">|
 | <kbd>backend</kbd> | <img src="/img/rust.svg" width="80" class="inline-block p-4"><img src="/img/actixweb.jpg" width="150" class="inline-block p-4"> |
 | <kbd>CI/CD</kbd> | <img src="/img/github_actions.svg" width="100"> |
 | <kbd>認証・認可</kbd> | <img src="/img/auth0.svg" width="100"> |
@@ -212,9 +208,12 @@ layout: section-2
 ---
 
 # 開発秘話
+frontend
 
-TODO
-- 神谷さん、西坂さんに聞く
+- 元々の構成は<img src="/img/react.svg" width="200" class="inline-block p-4"><whh-plus /><img src="/img/vite.svg" width="100" class="inline-block p-4">
+- ユーザのロースペックなPC環境を考慮してSSR化を検討、<img src="/img/next.js.svg" width="150" class="inline-block p-4">に。
+    - vite.jsの構成から、nest.jsの構成に移すのが大変だった。
+
 
 ---
 layout: section-2
@@ -277,7 +276,7 @@ src: ./slides/real_resources.md
 
 - 今回の場合では、設定ファイル無しでfirelensを使える
     - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、fluent bitの設定ファイルが必要という記事ばかり出てくるが、管理コスト。。。
-       - s3に置く、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
+        - s3に置く、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
     - ログ出力先が一ヶ所の場合のみ、タスク定義に記載したオプションを設定値としてfluent bitに渡せる
 
 <v-click>
@@ -328,7 +327,7 @@ src: ./slides/virtual_resources.md
 
 - だが、[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、イメージバージョン1.15.0以上は、環境変数`APPMESH_RESOURCE_ARN`を用いなければならない
     - バージョン1.19.1のイメージに`APPMESH_VIRTUAL_NODE_NAME`を追加すると、挙動が不安定になった
-       - `APPMESH_VIRTUAL_NODE_NAME`と`APPMESH_RESOURCE_ARN`を両方追加すると、envoyからappへの通信がconnection errorとなった
+        - `APPMESH_VIRTUAL_NODE_NAME`と`APPMESH_RESOURCE_ARN`を両方追加すると、envoyからappへの通信がconnection errorとなった
 - しかも、App Mesh統合の有効化にチェックを入れたとき、環境変数`APPMESH_VIRTUAL_NODE_NAME`を削除すると、エラーが出てタスク定義の保存に失敗する
     - App Mesh統合の有効化のチェックを外したうえで、`APPMESH_RESOURCE_ARN`のみが追加されるように、タスク定義のJSONを手で書くしかなかった
 
