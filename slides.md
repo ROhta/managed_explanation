@@ -208,12 +208,69 @@ layout: section-2
 ---
 
 # 開発秘話
+
 frontend
 
 - 元々の構成は<img src="/img/react.svg" width="200" class="inline-block p-4"><whh-plus /><img src="/img/vite.svg" width="100" class="inline-block p-4">
 - ユーザのロースペックなPC環境を考慮してSSR化を検討、<img src="/img/next.js.svg" width="150" class="inline-block p-4">に。
     - vite.jsの構成から、next.jsの構成に移すのが大変だった。
+    - ググってもjsの記事しか出てこない。tsの型指定が辛い。
 
+---
+
+# 開発秘話
+
+backend
+
+- アプリケーションレイヤーでもセキュリティを高める必要があり、 <img src="/img/rust.svg" width="80" class="inline-block p-4">採用。
+    - 異様に強い型制約、メモリ安全が魅力。
+    - ロギング、トークン検証処理等をモジュール化し、アスペクト指向プログラミングを実施。
+
+<v-click>
+
+- とはいえ、型制約が激しくてビルドが通らない。。。
+    - MySQLのテーブルでbool値を格納するカラムがtinyint(1)で作成されていた
+    - が、Rust側でintを指定すると、ビルドエラー。
+
+</v-click>
+
+<v-click>
+
+- [Rust公式](https://docs.rs/sqlx/0.3.5/sqlx/mysql/types/index.html)によると、MySQLのtinyint(1)はRustではbool型と扱う、とのこと。
+    - MySQL`int(11) unsigned `とRust`u16` であればエラーだが、MySQL`int(11) unsigned `とRust`u32` はエラーにならない
+
+</v-click>
+
+---
+
+# 開発秘話
+
+backend
+
+- オニオンアーキテクチャを以下のように実装した。
+    - ドメインモデル層: このシステムで扱うべき関心事。
+    - ドメインサービス層: ドメインモデルのビジネスロジックを定義。アプリケーションサービス層から利用される共通ロジックを提供。
+    - アプリケーションサービス層: ユーザとの接点（エンドポイント等）を定義。
+    - インフラストラクチャ層: 外部ライブラリ、DB等の接続。
+
+<v-click>
+
+- 実装したモジュールをどの層に置くか。
+    - SQL文の記述、AWS SDKはインフラストラクチャ層。ドメインモデリングを阻害しないようにする。
+    - トークン検証はアプリケーションサービス層。
+        - エンドポイント毎に検証スコープの範囲が違うため、ビジネスロジックにも思える
+        - アプリケーション固有の処理だが、ドメインに関する処理ではないので、アプリケーションサービス層に配置した。
+
+</v-click>
+
+---
+
+# 開発秘話
+
+backend
+
+- トークン検証
+    - TODO
 
 ---
 layout: section-2
