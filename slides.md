@@ -212,7 +212,7 @@ frontend
 
 - 元々の構成は<img src="/img/react.svg" width="200" class="inline-block p-4"><whh-plus /><img src="/img/vite.svg" width="100" class="inline-block p-4">
 - ユーザのロースペックなPC環境を考慮してSSR化を検討、<img src="/img/next.js.svg" width="150" class="inline-block p-4">に。
-    - vite.jsの構成から、nest.jsの構成に移すのが大変だった。
+    - vite.jsの構成から、next.jsの構成に移すのが大変だった。
 
 
 ---
@@ -420,7 +420,14 @@ layout: default-5
 layout: section-2
 ---
 
-# 使用技術<br/>（Dockerfile未満）<br/>まだあるよ
+<div class="grid grid-cols-[60%,40%] gap-4">
+
+# 使用技術<br/>（Dockerfile未満）
+
+<v-click>
+<img src="/img/madaaruyo.png" width="700">
+</v-click>
+</div>
 
 ---
 
