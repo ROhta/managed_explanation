@@ -61,7 +61,8 @@ layout: section-2
 
 </v-click>
 ---
-
+layout: default-2
+---
 # サ－ビス概要
 
 - 非機能要件
