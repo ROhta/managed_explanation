@@ -263,7 +263,7 @@ layout: section-2
 - AWS Route53
     - DNS SEC署名有効化
 - AWS App Mesh
-    - mTLS有効化
+    - TLS有効化
 
 ---
 src: ./slides/real_resources.md
@@ -487,7 +487,7 @@ layout: section-2
 - AWS Route53
     - DNS SEC署名有効化
 - AWS App Mesh
-    - mTLS有効化
+    - TLS有効化
 
 </div>
 <v-click><div>
