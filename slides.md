@@ -14,66 +14,20 @@ drawings:
 ---
 layout: quote
 ---
-<div id="contents">
-<div id="stars"></div>
-<div id="stars2"></div>
-<div id="stars3"></div>
-<div id="content">
-    <p>EPISODE 8</p>
-    <p>a long time ago in a galaxy far far away</p>
-    <p>
-    The Republic is crumbling under attacks <br />by the ruthless Sith Lord,
-    Count Dooku.
-    </p>
-    <p>
-    The FIRST ORDER reigns. Having decimated <br />the peaceful Republic,
-    Supreme Leader Snoke<br />
-    now deploys the merciless legions <br />to seize military controlof the
-    galaxy.
-    </p>
-</div>
-</div>
 
-<style>
-#contents {
-  height: 100%;
-  overflow: hidden;
-  background: #090a0f;
-}
+激しい開発を経て、プロダクト本体はリリースされた。
 
-#content {
-  position: absolute;
-  color: #ffff70;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 40px;
+しかし利用ユーザや企業の登録・更新・削除処理は、未だエンジニアの手作業で行われていた。
 
-}
+導入企業・ユーザ数が伸びるにつれ、その負荷も指数関数的に増大していた。
 
-#stars {
-  width: 1px;
-  height: 1px;
-  background: transparent;
-  transform: perspective(100px) rotateX(10deg);
-  animation: star 50s linear infinite;
-  box-shadow: 779px 1331px #fff, 324px 42px #fff, 303px 586px #fff,
-    1312px 276px #fff, 451px 625px #fff, 521px 1931px #fff, 1087px 1871px #fff,
-    36px 1546px #fff, 132px 934px #fff, 1698px 901px #fff, 1418px 664px #fff,
-    1448px 1157px #fff,
+これは、トイル撲滅のため立ち上がった男達の物語である。
 
-                         ...
+---
+layout: quote
+---
 
-
-@keyframes star {
-  from {
-    transform: translateY(0px);
-  }
-  to {
-    transform: translateY(-2000px);
-  }
-}
-</style>
+<img src="/img/beginning.jpg" class="container mx-auto">
 
 ---
 layout: default-5
@@ -117,9 +71,9 @@ layout: section-2
         - 製品アクセスの有無により、ユーザプールを分割する
     - マイクロサービスの開発・運用を効率化する
         - 冪等性の考慮
-          - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンが実装不要になるアーキテクチャを考える
+            - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンが実装不要になるアーキテクチャを考える
         - アプリケーション実装をビジネス実装に集中させる <typcn-equals /> インフラレイヤーでなるべく巻き取る
-          - ログ振分け・サーキットブレイカー等
+            - ログ振分け・サーキットブレイカー等
         - モニタリングの一覧性
     - セキュリティ最重視
         - WAF
@@ -309,7 +263,7 @@ layout: section-2
 - AWS Route53
     - DNS SEC署名有効化
 - AWS App Mesh
-  - mTLS有効化
+    - mTLS有効化
 
 ---
 src: ./slides/real_resources.md
@@ -505,9 +459,9 @@ layout: section-2
         - 製品アクセスの有無により、ユーザプールを分割する
     - マイクロサービスの開発・運用を効率化する
         - 冪等性の考慮
-          - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンが実装不要になるアーキテクチャを考える
+            - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンが実装不要になるアーキテクチャを考える
         - アプリケーション実装をビジネス実装に集中させる <typcn-equals /> インフラレイヤーでなるべく巻き取る
-          - ログ振分け・サーキットブレイカー等
+            - ログ振分け・サーキットブレイカー等
         - **モニタリングの一覧性**
     - **セキュリティ最重視**
         - **WAF**
@@ -533,7 +487,7 @@ layout: section-2
 - AWS Route53
     - DNS SEC署名有効化
 - AWS App Mesh
-  - mTLS有効化
+    - mTLS有効化
 
 </div>
 <v-click><div>
