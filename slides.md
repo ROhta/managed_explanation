@@ -382,13 +382,11 @@ src: ./slides/virtual_resources.md
 
 朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
 
-<div class="grid grid-cols-[35%,65%] gap-4">
-<div><v-click>
+<div class="grid grid-cols-[35%,65%] gap-4"><div><v-click>
 
 - 原因は、アプリケーションのヘルスチェックエンドポイントのステータスコードが200でなかったこと
 
 </v-click>
-
 <v-click>
 
 - 通信経路は以下
@@ -410,13 +408,13 @@ src: ./slides/virtual_resources.md
     - タスクにつき1コンテナーの起動だったため、4が停止してタスク数が0になる
     - ECSサービスで最低タスク数を1と設定したため、新たなタスクが立ち上がる
 
-</v-click><v-click>
+</v-click>
+<v-click>
 
 ## **無限ループ**
 
 </v-click>
-</div>
-</div>
+</div></div>
 
 ---
 
@@ -426,7 +424,9 @@ http2対応できない
 
 - actix webのAPI群への通信をhttp2にしたかったので、[公式](https://actix.rs/docs/http2/)にしたがってtls暗号化し、appをhttp2対応させた
 - が、`upstream connect error or disconnect/reset before headers. reset reason: connection termination`というenvoyのエラーが出力される
+
 <v-click>
+
 - awsサポート回答によると、↓とのこと
     - [http2は、tls必須ではない](https://qiita.com/kitauji/items/3bf03533895251c93af2#httpsh2-%E3%81%A8-httph2c)
     - envoyへの通信とenvoy app間のプロトコルは一致させなければならない。envoyへはhttp2、envoy app間はhttp1.1というのはできない。
@@ -435,6 +435,7 @@ http2対応できない
 
 </v-click>
 <v-click>
+
 - [actix webの公式](https://actix.rs/docs/http2/)を見ても、tls暗号化せずにhttp2化する方法が見つからない。`actix-web automatically upgrades connections to HTTP/2 if possible.`と書いてはあるが、tls暗号化しないとactix webはhttp2にならなかった。
 - actix webをtls暗号化せずにhttp2対応させる術が見つからず、app meshでのhttp2対応は諦めるという結論になった
 
