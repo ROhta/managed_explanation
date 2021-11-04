@@ -62,22 +62,19 @@ layout: section-2
 
 </v-click>
 ---
-layout: default-2
----
+
 # サ－ビス概要
 
 非機能要件
 
 - 別VPCのRDSを操作する
-- 認証・認可
-    - OIDC
+- 認証・認可 <bi-arrow-right-square-fill /> OIDC
     - 製品アクセスの有無により、ユーザプールを分割する
 - マイクロサービスの開発・運用を効率化する
     - 冪等性の考慮
         - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンが実装不要なアーキテクチャを考える
     - アプリケーション実装をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外はインフラでなるべく巻き取る
         - ログ振分け・サーキットブレイカー等
-    - モニタリングの一覧性
 - セキュリティ最重視
     - WAF
     - AWSアカウント自体の管理
@@ -139,14 +136,14 @@ Discussions <bi-arrow-right-square-fill /> Issues <bi-arrow-right-square-fill />
 
 # [GitHub Beta Projects](https://github.com/features/issues/)で管理
 
-<div class="grid grid-cols-[40%,60%] gap-4">
+<div class="grid grid-cols-[35%,65%] gap-4">
     <div>
         <p>JIRAのように扱うため、labelsで機能補完</p>
         <p>closed, blocked by等、チケット間の関係性を表現</p>
         <p>sortが奇麗になるよう、bug, enhance等の接頭辞を付与</p>
         <p>色の並びにも気を配った</p>
     </div>
-    <img src="/img/github_labels.png" width="400">
+    <img src="/img/github_labels.png" width="500">
 </div>
 
 ---
@@ -163,7 +160,7 @@ layout: section-2
 | <kbd>frontend</kbd> | <img src="/img/typescript.svg" width="70" class="inline-block p-4"><img src="/img/next.js.svg" width="100" class="inline-block p-4"><img src="/img/material_ui.svg" width="160" class="inline-block p-4">|
 | <kbd>backend</kbd> | <img src="/img/rust.svg" width="80" class="inline-block p-4"><img src="/img/actixweb.jpg" width="150" class="inline-block p-4"> |
 | <kbd>CI/CD</kbd> | <img src="/img/github_actions.svg" width="100"> |
-| <kbd>認証認可</kbd> | <img src="/img/auth0.svg" width="100"> |
+| <kbd>認証・認可</kbd> | <img src="/img/auth0.svg" width="100"> |
 
 ---
 
@@ -178,73 +175,65 @@ layout: section-2
 
 ---
 
-# 開発秘話
-
-frontend
+# 開発秘話（frontend）
 
 - 元々の構成は<img src="/img/react.svg" width="200" class="inline-block p-4"><whh-plus /><img src="/img/vite.svg" width="100" class="inline-block p-4">
-- ユーザのロースペックなPC環境を考慮してSSR化を検討、<img src="/img/next.js.svg" width="150" class="inline-block p-4">に。
-    - vite.jsの構成から、next.jsの構成に移すのが大変だった。
+- ユーザのロースペックなPC環境を考慮してSSR化を検討。<img src="/img/next.js.svg" width="150" class="inline-block p-4">に。
+    - vite.jsの構成から、next.jsの構成に移すのが大変だった
     - ググってもjsの記事しか出てこない。tsの型指定が辛い。
 
 ---
 
-# 開発秘話
+# 開発秘話（backend）
 
-backend
+rustの型制約が激しい
 
-#### rustの型制約が激しい
-
-- アプリケーションレイヤーでもセキュリティを高める必要があり、<img src="/img/rust.svg" width="80" class="inline-block p-4">採用。
-    - 異様に強い型制約、メモリ安全が魅力。
-    - ロギング、トークン検証等をモジュール化し、アスペクト指向プログラミングを実施。
+- アプリケーションレイヤーでもセキュリティを高める必要があり、<img src="/img/rust.svg" width="80" class="inline-block p-4">採用
+    - 異様に強い型制約、メモリ安全が魅力
+    - ロギング、トークン検証等をモジュール化し、アスペクト指向プログラミングを実施
 
 <v-click>
 
 - とはいえ、型制約が激しくてビルドが通らない。。。
     - MySQLのテーブルでbool値を格納するカラムがtinyint(1)で作成されていた
-    - が、Rust側でintを指定すると、ビルドエラー。
+    - が、Rust側でintを指定すると、ビルドエラー
 
 </v-click>
 
 <v-click>
 
-- [Rust公式](https://docs.rs/sqlx/0.3.5/sqlx/mysql/types/index.html)によると、MySQLのtinyint(1)はRustではbool型と扱う、とのこと。
+- [Rust公式](https://docs.rs/sqlx/0.3.5/sqlx/mysql/types/index.html)によると、MySQLのtinyint(1)はRustではbool型と扱う、とのこと
     - MySQL`int(11) unsigned `とRust`u16` であればエラーだが、MySQL`int(11) unsigned `とRust`u32` はエラーにならない
 
 </v-click>
 
 ---
 
-# 開発秘話
+# 開発秘話（backend）
 
-backend
+DDD
 
-#### DDD
-
-- オニオンアーキテクチャを以下のように実装した。
-    - ドメインモデル層: このシステムで扱うべき関心事。
+- オニオンアーキテクチャを以下のように実装した
+    - ドメインモデル層: このシステムで扱うべき関心事
     - ドメインサービス層: ドメインモデルのビジネスロジックを定義。アプリケーションサービス層から利用される共通ロジックを提供。
-    - アプリケーションサービス層: ユーザとの接点（エンドポイント等）を定義。
-    - インフラストラクチャ層: 外部ライブラリ、DB等の接続。
+    - アプリケーションサービス層: ユーザとの接点（エンドポイント等）を定義
+    - インフラストラクチャ層: 外部ライブラリ、DB等の接続
 
 <v-click>
 
-- 実装したモジュールをどの層に置くか。
-    - SQL文の記述、AWS SDKはインフラストラクチャ層。ドメインモデリングを阻害しないようにする。
-    - トークン検証はアプリケーションサービス層。
+- 実装したモジュールをどの層に置くか
+    - SQL文の記述、AWS SDKはインフラストラクチャ層に。ドメインモデリングを阻害しないようにする。
+    - トークン検証はアプリケーションサービス層
         - エンドポイント毎に検証スコープの範囲が違うため、ビジネスロジックにも思える
-        - アプリケーション固有の処理だが、ドメインに関する処理ではないので、アプリケーションサービス層に配置した。
+        - アプリケーション固有の処理だが、ドメインに関する処理ではないので、アプリケーションサービス層に配置した
 
 </v-click>
 
 ---
 
-# 開発秘話
+# 開発秘話（backend）
 
-backend
-
-#### やっぱりrustの型制約が激しい
+やっぱりrustの型制約が激しい
 
 - 型制約が激しくてDIが辛い。。。
     - [goでinterface型を使う](https://qiita.com/hirotakan/items/698c1f5773a3cca6193e#interfacesdatabase--frameworks--drivers%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC)ような逃げ道がない。
@@ -252,11 +241,9 @@ backend
 
 ---
 
-# 開発秘話
+# 開発秘話（backend）
 
-backend
-
-#### トークン検証
+トークン検証
 
 - TODO
 
@@ -307,7 +294,7 @@ src: ./slides/real_resources.md
 
 - awsがマネージドサービス用にカスタマイズしたfluent bit
 - log_routerコンテナーをサイドカー構成でecsタスクに同梱し、任意の場所にログ送信
-    - envoyのアクセスログはs3、アプリケーションログはcloudwatch logs、アクセスログのうち特定のIPからのログだけkinesis data firehose経由でAmazon OpenSearchに、等
+    - envoyのアクセスログはs3へ、アプリケーションログはcloudwatch logsへ、アクセスログのうち特定のIPからのログだけkinesis data firehose経由でAmazon OpenSearchに、等
 - 試されるfluent bit力
     - 全ログをとりあえずcloudwatch logsに出力中
     - Datadogにも出力して、可視性・一覧性を追求する
@@ -323,7 +310,7 @@ firelens
 
 - 今回の場合では、設定ファイル無しでfirelensを使える
     - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、タスク定義とは別に、fluent bitの設定ファイルが別途必要という記事ばかりヒットする
-        - s3に配置する、設定ファイルをコンテナー内で読み込むようDockerfileを編集する、等
+        - s3に配置する、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
         - 管理コスト。。。
 
 <v-click>
@@ -371,10 +358,9 @@ src: ./slides/virtual_resources.md
 
 ---
 
-# 開発秘話
+# 開発秘話（App Mesh）
 
-App Mesh
-#### マネコンで設定すると、誤ったデフォルト値が強制挿入される
+マネコンで設定すると、誤ったデフォルト値が強制挿入される
 
 - AWSマネジメントコンソールでタスク定義を作成する際、App Mesh統合の有効化にチェックを入れると、App Meshで用いるenvoyイメージや必要な設定が自動挿入される
     - 東京リージョンで自動設定されるイメージバージョンは`v1.19.1.0-prod`だった
@@ -385,18 +371,16 @@ App Mesh
 - だが[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、イメージバージョン1.15.0以上は、環境変数`APPMESH_RESOURCE_ARN`を用いなければならない
     - バージョン1.19.1のイメージに`APPMESH_VIRTUAL_NODE_NAME`を追加すると、挙動が不安定になった
         - `APPMESH_VIRTUAL_NODE_NAME`と`APPMESH_RESOURCE_ARN`を両方追加すると、envoyからappへの通信がconnection errorとなった
-- しかも、App Mesh統合の有効化にチェックを入れたとき、環境変数`APPMESH_VIRTUAL_NODE_NAME`を削除すると、エラーが出てタスク定義の保存に失敗する
+- しかも、App Mesh統合の有効化にチェックを入れたとき、`APPMESH_VIRTUAL_NODE_NAME`を削除すると、エラーが出てタスク定義の保存に失敗する
     - App Mesh統合の有効化のチェックを外したうえで、`APPMESH_RESOURCE_ARN`のみが追加されるように、タスク定義のJSONを手で書くしかなかった
 
 </v-click>
 
 ---
 
-# 開発秘話
+# 開発秘話（App Mesh）
 
-App Mesh
-
-#### 朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
+朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
 
 - 原因は、アプリケーションのヘルスチェックエンドポイントのステータスコードが200でなかったこと。通信経路は以下。
     1. Route53ホストゾーン
@@ -409,7 +393,7 @@ App Mesh
 
 <v-click>
 
-- mesh内通信でステータスコードは書き換えられない <typcn-equals /> 3が受け取るステータスコードは7のもの
+- mesh内通信でステータスコードは書き換えられない <typcn-equals /> 3の受け取るステータスコードは7のもの
     - 3のヘルスチェックに失敗するため、4にSIGTERMが送信される
     - タスクにつき1コンテナーの起動だったため、4が停止してタスク数が0になる
     - ECSサービスで最低タスク数を1と設定したため、新たなタスクが立ち上がる
@@ -424,13 +408,11 @@ App Mesh
 
 ---
 
-# 開発秘話
+# 開発秘話（App Mesh）
 
-App Mesh
+http2対応できない
 
-#### http2対応できない
-
-- actix webのAPI群への通信をhttp2にしたかったので、[公式](https://actix.rs/docs/http2/)にしたがって鍵を用意し、appをhttp2対応させた
+- actix webのAPI群への通信をhttp2にしたかったので、[公式](https://actix.rs/docs/http2/)にしたがってtls暗号化し、appをhttp2対応させた
 - が、`upstream connect error or disconnect/reset before headers. reset reason: connection termination`というenvoyのエラーが出力される
 
 <v-click>
@@ -446,8 +428,8 @@ App Mesh
 
 <v-click>
 
-- 公式を見ても、tls暗号化せずにhttp2化する方法が見つからない。`actix-web automatically upgrades connections to HTTP/2 if possible.`と書いてはあるが、鍵を用意しないとactix webはhttp2にならなかった。
-- actix webをtls暗号化せずhttp2対応させる術が見つからず、app meshでのhttp2対応は諦めるという結論になった
+- [actix webの公式](https://actix.rs/docs/http2/)を見ても、tls暗号化せずにhttp2化する方法が見つからない。`actix-web automatically upgrades connections to HTTP/2 if possible.`と書いてはあるが、tls暗号化しないとactix webはhttp2にならなかった。
+- actix webをtls暗号化せずにhttp2対応させる術が見つからず、app meshでのhttp2対応は諦めるという結論になった
 
 </v-click>
 
@@ -497,21 +479,19 @@ layout: section-2
 非機能要件
 
 - 別VPCのRDSを操作する
-- 認証・認可
-    - OIDC
+- 認証・認可 <bi-arrow-right-square-fill /> OIDC
     - 製品アクセスの有無により、ユーザプールを分割する
 - マイクロサービスの開発・運用を効率化する
     - 冪等性の考慮
         - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンが実装不要なアーキテクチャを考える
     - アプリケーション実装をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外はインフラでなるべく巻き取る
         - ログ振分け・サーキットブレイカー等
-    - **モニタリングの一覧性**
 
 <v-click>
 
-- セキュリティ最重視
-    - WAF
-    - AWSアカウント自体の管理
+- **セキュリティ最重視**
+    - **WAF**
+    - **AWSアカウント自体の管理**
 
 </v-click>
 
@@ -520,7 +500,7 @@ layout: section-2
 
 # 使用技術（Dockerfile未満）
 
-<div class="grid grid-cols-[45%,55%] gap-4"><div>
+<div class="grid grid-cols-[48%,52%] gap-4"><div>
 
 ## コンテナー・ネットワーク
 
@@ -553,7 +533,7 @@ layout: section-2
 - AWS KMSをきちんと管理
 - AWS IAMをきちんと管理
     - きちんとIAMグループ作ってポリシー割当
-    - 各IAMユーザにパーミッションバウンダリを設定
+    - 各IAMユーザにパーミッションバウンダリ設定
 - [AWS BudgetsをChatbotでSlackに通知](https://dev.classmethod.jp/articles/aws-budgets-alert-by-aws-chatbot/)
 
 </div></v-click>
