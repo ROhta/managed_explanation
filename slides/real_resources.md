@@ -1,5 +1,5 @@
 ---
-layout: default-6
+layout: default-3
 ---
 
 # 実体リソース

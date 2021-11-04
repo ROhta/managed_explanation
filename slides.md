@@ -51,9 +51,10 @@ layout: section-2
 
 # サ－ビス概要
 
-- 機能要件
-    - ユーザ・企業・接続元IPリストのCRUDをする
-    - ユーザを作る権限を持った企業外ユーザ（販売代理店等）を管理する
+機能要件
+
+- ユーザ・企業・接続元IPリストのCRUDをする
+- ユーザを作る権限を持った企業外ユーザ（販売代理店等）を管理する
 
 <v-click>
 
@@ -65,20 +66,21 @@ layout: default-2
 ---
 # サ－ビス概要
 
-- 非機能要件
-    - 別VPCのRDSを操作する
-    - 認証・認可
-        - OIDC
-        - 製品アクセスの有無により、ユーザプールを分割する
-    - マイクロサービスの開発・運用を効率化する
-        - 冪等性の考慮
-            - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンが実装不要になるアーキテクチャを考える
-        - アプリケーション実装をビジネス実装に集中させる <typcn-equals /> インフラレイヤーでなるべく巻き取る
-            - ログ振分け・サーキットブレイカー等
-        - モニタリングの一覧性
-    - セキュリティ最重視
-        - WAF
-        - AWSアカウント自体の管理
+非機能要件
+
+- 別VPCのRDSを操作する
+- 認証・認可
+    - OIDC
+    - 製品アクセスの有無により、ユーザプールを分割する
+- マイクロサービスの開発・運用を効率化する
+    - 冪等性の考慮
+        - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンが実装不要なアーキテクチャを考える
+    - アプリケーション実装をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外はインフラでなるべく巻き取る
+        - ログ振分け・サーキットブレイカー等
+    - モニタリングの一覧性
+- セキュリティ最重視
+    - WAF
+    - AWSアカウント自体の管理
 
 ---
 layout: section-2
@@ -89,48 +91,62 @@ layout: section-2
 
 # [GitHub Beta Projects](https://github.com/features/issues/)で管理
 
-<div class="grid grid-cols-[46%,54%] gap-4">
-    <div>
-        <p>Discussions <bi-arrow-right-square-fill /> Issues <bi-arrow-right-square-fill /> Pull Requests の流れが最高</p>
-        <p>Discussions<br/>とりあえずの提案・バグか仕様か分からないので質問、等</p>
-        <p>Issues<br/>やることが決定したもの</p>
-        <p>Pull Requests<br/>実装のレビュー</p>
-        <p>IssuesやPull Requestsはテンプレートを設置</p>
-        <p>Issuesはボタン一つでテンプレートを使い分けられるように</p>
-    </div>
-    <div>
-        <img src="/img/github_discussions.png" width= "500">
-        <br/>
-        <img src="/img/github_issue_template.png" width= "500">
-    </div>
-</div>
+Discussions <bi-arrow-right-square-fill /> Issues <bi-arrow-right-square-fill /> Pull Requestsの流れが最高
+
+<v-click>
+
+- Discussions : とりあえずの提案・バグか仕様か分からないので質問、等
+
+<img src="/img/github_discussions.png" width= "450">
+
+</v-click>
+<v-click>
+
+- Issues : やることが決定したもの
+
+</v-click>
+<v-click>
+
+- Pull Requests : 実装のレビュー
+
+</v-click>
+<v-click>
+
+- テンプレートを設置し、ボタンでIssuesの複数テンプレートを使い分ける
+
+<img src="/img/github_issue_template.png" width= "450">
+
+</v-click>
+
 
 ---
 
 # [GitHub Beta Projects](https://github.com/features/issues/)で管理
 
-<div class="grid grid-cols-[27%,73%] gap-4">
-    <div>
-        <p>複数リポジトリのIssuesを一覧化</p>
-        <p>各マイクロサービスのリポジトリを一つ一つ見に行く必要がない</p>
-        <p>カスタムフィールドでPriorityを追加</p>
-        <p>Priority毎にグループ分けして表示</p>
-    </div>
-    <img src="/img/github_project.png" width= "600">
-</div>
+複数リポジトリのIssuesを一覧化
+
+<img src="/img/github_project.png" width= "650">
+
+<v-click>
+
+- 各マイクロサービスのリポジトリを1つ1つ見に行く必要がない
+- カスタムフィールドでPriorityを追加
+- Priority毎にグループ分けして表示
+
+</v-click>
 
 ---
 
 # [GitHub Beta Projects](https://github.com/features/issues/)で管理
 
-<div class="grid grid-cols-[50%,50%] gap-4">
+<div class="grid grid-cols-[40%,60%] gap-4">
     <div>
         <p>JIRAのように扱うため、labelsで機能補完</p>
         <p>closed, blocked by等、チケット間の関係性を表現</p>
         <p>sortが奇麗になるよう、bug, enhance等の接頭辞を付与</p>
         <p>色の並びにも気を配った</p>
     </div>
-    <img src="/img/github_labels.png" width="370">
+    <img src="/img/github_labels.png" width="400">
 </div>
 
 ---
@@ -147,7 +163,7 @@ layout: section-2
 | <kbd>frontend</kbd> | <img src="/img/typescript.svg" width="70" class="inline-block p-4"><img src="/img/next.js.svg" width="100" class="inline-block p-4"><img src="/img/material_ui.svg" width="160" class="inline-block p-4">|
 | <kbd>backend</kbd> | <img src="/img/rust.svg" width="80" class="inline-block p-4"><img src="/img/actixweb.jpg" width="150" class="inline-block p-4"> |
 | <kbd>CI/CD</kbd> | <img src="/img/github_actions.svg" width="100"> |
-| <kbd>認証・認可</kbd> | <img src="/img/auth0.svg" width="100"> |
+| <kbd>認証認可</kbd> | <img src="/img/auth0.svg" width="100"> |
 
 ---
 
@@ -156,7 +172,7 @@ layout: section-2
 |     |     |
 | --- | --- |
 | <kbd>frontend</kbd> | SSRに対応 |
-| <kbd>backend</kbd> | DDD指向・オニオンアーキテクチャで実装、リソースAPIではトークン検証処理を行う |
+| <kbd>backend</kbd> | DDD指向・オニオンアーキテクチャで実装<br/>リソースAPIではトークン検証処理を行う |
 | <kbd>CI/CD</kbd> | [aws謹製のGithub Actions](https://github.com/aws-actions)で実装 |
 | <kbd>認証・認可</kbd> | OIDCに則って各APIを構築 ・ [Organizations](https://auth0.com/docs/organizations)機能を使用（予定） |
 
@@ -177,9 +193,11 @@ frontend
 
 backend
 
+#### rustの型制約が激しい
+
 - アプリケーションレイヤーでもセキュリティを高める必要があり、<img src="/img/rust.svg" width="80" class="inline-block p-4">採用。
     - 異様に強い型制約、メモリ安全が魅力。
-    - ロギング、トークン検証処理等をモジュール化し、アスペクト指向プログラミングを実施。
+    - ロギング、トークン検証等をモジュール化し、アスペクト指向プログラミングを実施。
 
 <v-click>
 
@@ -202,6 +220,8 @@ backend
 
 backend
 
+#### DDD
+
 - オニオンアーキテクチャを以下のように実装した。
     - ドメインモデル層: このシステムで扱うべき関心事。
     - ドメインサービス層: ドメインモデルのビジネスロジックを定義。アプリケーションサービス層から利用される共通ロジックを提供。
@@ -218,13 +238,17 @@ backend
 
 </v-click>
 
-<v-click>
+---
+
+# 開発秘話
+
+backend
+
+#### やっぱりrustの型制約が激しい
 
 - 型制約が激しくてDIが辛い。。。
     - [goでinterface型を使う](https://qiita.com/hirotakan/items/698c1f5773a3cca6193e#interfacesdatabase--frameworks--drivers%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC)ような逃げ道がない。
     - 依存関係を逆転しきれないことも。
-
-</v-click>
 
 ---
 
@@ -232,8 +256,9 @@ backend
 
 backend
 
-- トークン検証
-    - TODO
+#### トークン検証
+
+- TODO
 
 ---
 layout: section-2
@@ -259,12 +284,11 @@ layout: section-2
     - ライフサイクルポリシー設定
 - AWS Application Load Balancer
 - AWS Firelens
-- AWS Cloudwatch Logs
 - AWS Cloud Map
 - AWS Route53
     - DNS SEC署名有効化
 - AWS App Mesh
-    - TLS有効化
+    - VPC内通信もTLS有効化
 
 ---
 src: ./slides/real_resources.md
@@ -282,8 +306,8 @@ src: ./slides/real_resources.md
 ## [firelens](https://dev.classmethod.jp/articles/aws-fargate-with-firelens-minimum/)
 
 - awsがマネージドサービス用にカスタマイズしたfluent bit
-- log_routerコンテナーをサイドカー構成でecsタスクに同梱し、好きな場所にログ送信できる
-    - envoyのアクセスログはs3、アプリケーションログはcloudwatch logs、アクセスログうち特定のIPだけkinesis data firehose経由でAmazon OpenSearchに、等
+- log_routerコンテナーをサイドカー構成でecsタスクに同梱し、任意の場所にログ送信
+    - envoyのアクセスログはs3、アプリケーションログはcloudwatch logs、アクセスログのうち特定のIPからのログだけkinesis data firehose経由でAmazon OpenSearchに、等
 - 試されるfluent bit力
     - 全ログをとりあえずcloudwatch logsに出力中
     - Datadogにも出力して、可視性・一覧性を追求する
@@ -294,12 +318,25 @@ src: ./slides/real_resources.md
 
 # 開発秘話
 
+firelens
+
+
 - 今回の場合では、設定ファイル無しでfirelensを使える
-    - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、fluent bitの設定ファイルが必要という記事ばかり出てくるが、管理コスト。。。
-        - s3に置く、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
-    - ログ出力先が一ヶ所の場合のみ、タスク定義に記載したオプションを設定値としてfluent bitに渡せる
+    - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、タスク定義とは別に、fluent bitの設定ファイルが別途必要という記事ばかりヒットする
+        - s3に配置する、設定ファイルをコンテナー内で読み込むようDockerfileを編集する、等
+        - 管理コスト。。。
 
 <v-click>
+
+- ログ出力先が一ヶ所の場合のみ、タスク定義に記載したオプションを設定値としてfluent bitに渡せる
+
+</v-click>
+
+---
+
+# 開発秘話
+
+firelens
 
 - log_routerコンテナー自体のログ（Cloudwatch Logs）にDataAlreadyAcceptedExceptionエラーが出力され続ける
     - `The given batch of log events has already been accepted. The next batch can be sent with sequenceToken`のメッセージが、ECSタスクがリクエストを受け付ける毎に記録される
@@ -310,7 +347,6 @@ src: ./slides/real_resources.md
         - Matchパラメーターが複数設定され、ログの二重送信をCloudWatch Logsが拒否した結果、DataAlreadyAcceptedExceptionエラーが発生していた
     - AWSサポートに問い合わせて、解決まで2か月かかった。。。
 
-</v-click>
 
 ---
 src: ./slides/real_resources.md
@@ -337,15 +373,16 @@ src: ./slides/virtual_resources.md
 
 # 開発秘話
 
-マネコンで設定すると、誤ったデフォルト値が強制挿入される
+App Mesh
+#### マネコンで設定すると、誤ったデフォルト値が強制挿入される
 
 - AWSマネジメントコンソールでタスク定義を作成する際、App Mesh統合の有効化にチェックを入れると、App Meshで用いるenvoyイメージや必要な設定が自動挿入される
-    - 東京リージョンで自動設定されるイメージは`840364872350.dkr.ecr.ap-northeast-1.amazonaws.com/aws-appmesh-envoy:v1.19.1.0-prod`だった
-    - 挿入される情報の1つにコンテナー環境変数`APPMESH_VIRTUAL_NODE_NAME`があった
+    - 東京リージョンで自動設定されるイメージバージョンは`v1.19.1.0-prod`だった
+    - envoyコンテナーに環境変数`APPMESH_VIRTUAL_NODE_NAME`が自動挿入される
 
 <v-click>
 
-- だが、[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、イメージバージョン1.15.0以上は、環境変数`APPMESH_RESOURCE_ARN`を用いなければならない
+- だが[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、イメージバージョン1.15.0以上は、環境変数`APPMESH_RESOURCE_ARN`を用いなければならない
     - バージョン1.19.1のイメージに`APPMESH_VIRTUAL_NODE_NAME`を追加すると、挙動が不安定になった
         - `APPMESH_VIRTUAL_NODE_NAME`と`APPMESH_RESOURCE_ARN`を両方追加すると、envoyからappへの通信がconnection errorとなった
 - しかも、App Mesh統合の有効化にチェックを入れたとき、環境変数`APPMESH_VIRTUAL_NODE_NAME`を削除すると、エラーが出てタスク定義の保存に失敗する
@@ -357,9 +394,11 @@ src: ./slides/virtual_resources.md
 
 # 開発秘話
 
-朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
+App Mesh
 
-- 原因は、アプリケーションのヘルスチェックエンドポイントのステータスが200でなかったこと。通信経路は以下。
+#### 朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
+
+- 原因は、アプリケーションのヘルスチェックエンドポイントのステータスコードが200でなかったこと。通信経路は以下。
     1. Route53ホストゾーン
     2. ALB
     3. ターゲットグループ
@@ -387,7 +426,9 @@ src: ./slides/virtual_resources.md
 
 # 開発秘話
 
-http2対応できない
+App Mesh
+
+#### http2対応できない
 
 - actix webのAPI群への通信をhttp2にしたかったので、[公式](https://actix.rs/docs/http2/)にしたがって鍵を用意し、appをhttp2対応させた
 - が、`upstream connect error or disconnect/reset before headers. reset reason: connection termination`というenvoyのエラーが出力される
@@ -440,7 +481,7 @@ layout: default-5
 layout: section-2
 ---
 
-<div class="grid grid-cols-[60%,40%] gap-4">
+<div class="grid grid-cols-[65%,35%] gap-4">
 
 # 使用技術<br/>（Dockerfile未満）
 
@@ -453,26 +494,33 @@ layout: section-2
 
 # サ－ビス概要
 
-- 非機能要件
-    - 別VPCのRDSを操作する
-    - 認証・認可
-        - OIDC
-        - 製品アクセスの有無により、ユーザプールを分割する
-    - マイクロサービスの開発・運用を効率化する
-        - 冪等性の考慮
-            - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンが実装不要になるアーキテクチャを考える
-        - アプリケーション実装をビジネス実装に集中させる <typcn-equals /> インフラレイヤーでなるべく巻き取る
-            - ログ振分け・サーキットブレイカー等
-        - **モニタリングの一覧性**
-    - **セキュリティ最重視**
-        - **WAF**
-        - **AWSアカウント自体の管理**
+非機能要件
+
+- 別VPCのRDSを操作する
+- 認証・認可
+    - OIDC
+    - 製品アクセスの有無により、ユーザプールを分割する
+- マイクロサービスの開発・運用を効率化する
+    - 冪等性の考慮
+        - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンが実装不要なアーキテクチャを考える
+    - アプリケーション実装をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外はインフラでなるべく巻き取る
+        - ログ振分け・サーキットブレイカー等
+    - **モニタリングの一覧性**
+
+<v-click>
+
+- セキュリティ最重視
+    - WAF
+    - AWSアカウント自体の管理
+
+</v-click>
+
 
 ---
 
 # 使用技術（Dockerfile未満）
 
-<div class="grid grid-cols-[50%,50%] gap-4"><div>
+<div class="grid grid-cols-[45%,55%] gap-4"><div>
 
 ## コンテナー・ネットワーク
 
@@ -483,12 +531,11 @@ layout: section-2
     - ライフサイクルポリシー設定
 - AWS Application Load Balancer
 - AWS Firelens
-- AWS Cloudwatch Logs
 - AWS Cloud Map
 - AWS Route53
     - DNS SEC署名有効化
 - AWS App Mesh
-    - TLS有効化
+    - VPC内通信もTLS有効化
 
 </div>
 <v-click><div>
@@ -517,7 +564,7 @@ src: ./slides/real_resources.md
 ---
 
 ---
-layout: default-6
+layout: default-3
 ---
 
 ## セキュリティ対策も追加
@@ -525,7 +572,7 @@ layout: default-6
 <img src="/img/add_security_resources.svg" width="560">
 
 ---
-layout: default-6
+layout: default-3
 ---
 
 ## dev環境のみの構成
