@@ -362,13 +362,15 @@ src: ./slides/virtual_resources.md
 
 マネコンで設定すると、誤ったデフォルト値が強制挿入される
 
-- AWSマネジメントコンソールでタスク定義を作成する際、App Mesh統合の有効化にチェックを入れると、App Meshで用いるenvoyイメージや必要な設定が自動挿入される
-    - 東京リージョンで自動設定されるイメージバージョンは`v1.19.1.0-prod`だった
-    - envoyコンテナーに環境変数`APPMESH_VIRTUAL_NODE_NAME`が挿入される
-
 <v-click>
 
-- だが[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、バージョン1.15.0以上は、環境変数`APPMESH_RESOURCE_ARN`を用いなければならない
+- AWSマネジメントコンソールでタスク定義を作成する際、App Mesh統合の有効化にチェックを入れると、App Meshで用いるenvoyイメージや必要な設定が自動挿入される
+    - envoyコンテナーに環境変数`APPMESH_VIRTUAL_NODE_NAME`が挿入される
+
+</v-click>
+<v-click>
+
+- 東京リージョンで自動設定されるイメージバージョンは`v1.19.1.0-prod`だったが、[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、1.15.0以上は、環境変数`APPMESH_RESOURCE_ARN`を用いなければならない
     - バージョン1.19.1のイメージに`APPMESH_VIRTUAL_NODE_NAME`を追加すると、挙動が不安定になった
         - `APPMESH_VIRTUAL_NODE_NAME`と`APPMESH_RESOURCE_ARN`を両方追加すると、envoyからappへの通信がconnection errorとなった
 - さらに、App Mesh統合の有効化をチェックして、`APPMESH_VIRTUAL_NODE_NAME`を削除すると、エラーでタスク定義の保存に失敗する
@@ -382,7 +384,7 @@ src: ./slides/virtual_resources.md
 
 朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
 
-<div class="grid grid-cols-[45%,65%] gap-4"><div><v-click>
+<div class="grid grid-cols-[48%,52%] gap-4"><div><v-click>
 
 - 原因は、アプリケーションのヘルスチェックエンドポイントのステータスコードが200でなかったこと
 
