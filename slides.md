@@ -443,9 +443,12 @@ src: ./slides/virtual_resources.md
 
 http2対応できない
 
+<v-click>
+
 - actix webのAPI群への通信をhttp2にしたかったので、[公式](https://actix.rs/docs/http2/)にしたがってtls暗号化し、appをhttp2対応させた
 - が、`upstream connect error or disconnect/reset before headers. reset reason: connection termination`というenvoyのエラーが出力される
 
+</v-click>
 <v-click>
 
 - awsサポート回答によると、↓とのこと
