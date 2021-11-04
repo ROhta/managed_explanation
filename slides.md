@@ -370,7 +370,7 @@ src: ./slides/virtual_resources.md
 </v-click>
 <v-click>
 
-- 東京リージョンで自動設定されるイメージバージョンは`v1.19.1.0-prod`だったが、[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、1.15.0以上は、環境変数`APPMESH_RESOURCE_ARN`を用いなければならない
+- 東京リージョンで自動設定されるイメージバージョンは`v1.19.1.0-prod`だったが、[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、1.15.0以上では環境変数`APPMESH_RESOURCE_ARN`が必要
     - バージョン1.19.1のイメージに`APPMESH_VIRTUAL_NODE_NAME`を追加すると、挙動が不安定になった
         - `APPMESH_VIRTUAL_NODE_NAME`と`APPMESH_RESOURCE_ARN`を両方追加すると、envoyからappへの通信がconnection errorとなった
 - さらに、App Mesh統合の有効化をチェックして、`APPMESH_VIRTUAL_NODE_NAME`を削除すると、エラーでタスク定義の保存に失敗する
@@ -386,7 +386,7 @@ src: ./slides/virtual_resources.md
 
 <div class="grid grid-cols-[48%,52%] gap-4"><div><v-click>
 
-- 原因は、アプリケーションのヘルスチェックエンドポイントのステータスコードが200でなかったこと
+- 原因は、appのヘルスチェックエンドポイントのステータスコードが200以外だったこと
 
 </v-click>
 <v-click>
@@ -405,9 +405,9 @@ src: ./slides/virtual_resources.md
 </div>
 <div><v-click>
 
-- mesh内通信でステータスコードは書き換えられない <typcn-equals /> 3の受け取るステータスコードは8のもの
-    - 3のヘルスチェックに失敗するため、4にSIGTERMが送信される
-    - タスクにつき1コンテナーの起動だったため、4が停止してタスク数が0になる
+- mesh内通信でステータスコードは書き換えられない <br/><typcn-equals /> ターゲットグループの受け取るステータスコードはappのもの
+    - 200以外のステータスコードをターゲットグループが受け取ると、ターゲットグループ自身のヘルスチェックに失敗するため、仮想ゲートウェイにSIGTERMが送信される
+    - タスクにつき1コンテナーの起動だったため、仮想ゲートウェイのenvoyコンテナーが停止してタスク数が0になる
     - ECSサービスで最低タスク数を1と設定したため、新たなタスクが立ち上がる
 
 </v-click>
