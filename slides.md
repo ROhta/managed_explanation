@@ -73,7 +73,7 @@ layout: section-2
 - マイクロサービスの開発・運用を効率化する
     - 冪等性の考慮
         - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンの実装が不要なアーキテクチャを考える
-    - アプリケーション実装をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外の処理はなるべくインフラで実装する
+    - アプリケーションでの処理をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外の処理はなるべくインフラで実装する
         - ログ振分け・サーキットブレイカー等
 - セキュリティ最重視
     - WAF
@@ -294,7 +294,7 @@ src: ./slides/real_resources.md
 
 - awsがマネージドサービス用にカスタマイズしたfluent bit
 - log_routerコンテナーをサイドカー構成でecsタスクに同梱し、任意の場所にログ送信
-    - たとえば、envoyのアクセスログはs3へ、アプリケーションログはCloudwatch Logsへ、アクセスログのうち特定のIPからのログのみkinesis data firehose経由でAmazon OpenSearchへ等
+    - たとえば、envoyのアクセスログはs3へ、アプリケーションログはCloudwatch Logsへ、アクセスログのうち特定のクライアントからのログのみkinesis data firehose経由でAmazon OpenSearchへ等
 - 試されるfluent bit力
     - 全ログをとりあえずcloudwatch logsに出力中
     - Datadogにも出力して、可視性・一覧性を追求する
@@ -382,7 +382,7 @@ src: ./slides/virtual_resources.md
 
 朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
 
-<div class="grid grid-cols-[40%,60%] gap-4"><div><v-click>
+<div class="grid grid-cols-[45%,65%] gap-4"><div><v-click>
 
 - 原因は、アプリケーションのヘルスチェックエンドポイントのステータスコードが200でなかったこと
 
@@ -442,7 +442,12 @@ http2対応できない
 http2対応できない
 
 - [actix webの公式](https://actix.rs/docs/http2/)を見ても、tls暗号化せずにhttp2化する方法が見つからない。`actix-web automatically upgrades connections to HTTP/2 if possible.`と書いてはあるが、tls暗号化しないとactix webはhttp2にならなかった。
+
+<v-click>
+
 - actix webをtls暗号化せずにhttp2対応させる術が見つからず、app meshでのhttp2対応は諦めるという結論になった
+
+</v-click>
 
 ---
 src: ./slides/virtual_resources.md
@@ -495,7 +500,7 @@ layout: section-2
 - マイクロサービスの開発・運用を効率化する
     - 冪等性の考慮
         - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンの実装が不要なアーキテクチャを考える
-    - アプリケーション実装をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外の処理はなるべくインフラで実装する
+    - アプリケーションでの処理をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外の処理はなるべくインフラで実装する
         - ログ振分け・サーキットブレイカー等
 
 <v-click>
