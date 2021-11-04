@@ -415,12 +415,15 @@ src: ./slides/virtual_resources.md
     - ECSサービスで最低タスク数を1と設定したため、新たなタスクが立ち上がる
 
 </v-click>
-<v-click>
-
-## **無限ループ**
-
-</v-click>
 </div></div>
+
+---
+
+# 開発秘話（App Mesh）
+
+朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
+
+<img src="/img/mugen.jpg" width="800">
 
 ---
 
