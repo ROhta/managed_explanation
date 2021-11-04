@@ -4,9 +4,9 @@ class: 'text-center'
 highlighter: prism
 lineNumbers: true
 info: |
-  ## 開発説明
+    # ユーザ管理画面開発
 drawings:
-  persist: false
+    persist: false
 ---
 
 # ユーザ管理画面開発説明
@@ -14,70 +14,20 @@ drawings:
 ---
 layout: quote
 ---
-# TODO
 
-<div class="titles"><div class="titlecontent">
+激しい開発を経て、プロダクト本体はリリースされた。
 
- <p class="center">EPISODE IV<br />A NEW HOPE FOR CSS3</p>
+しかし利用ユーザや企業の登録・更新・削除処理は、未だエンジニアの手作業で行われていた。
 
- <p>It is a period of vendor war.</p>
+導入企業・ユーザ数が伸びるにつれ、その負荷も指数関数的に増大していた。
 
- <p>This is a demonstration of Star Wars-style scrolling 3D titles in CSS3. It possibly has no practical purpose whatsoever but it looks great and you can impress your friends.</p>
+これは、トイル撲滅のため立ち上がった男達の物語である。
 
- <p>Before movie-buffs start ranting, I realize Star Wars wasn't the first to use crawling 3D titles, but few of you will remember the Flash Gordon series or the 1936 adaption of HG Wells' "Things to Come".</p>
+---
+layout: quote
+---
 
- <p>Also, by mentioning "Star Wars", everyone will understand what I mean. And I'll receive several thousand more visits.</p>
-
- <p>The scrolling titles work well in Chrome, Safari and Firefox. Opera doesn't implement 3D transforms yet, but the text will scroll. IE users receive a blank page. A shame, but IE10 should support it.</p>
-
- <p>So how does it work? Well, it's fairly simple. We have an outer absolute DIV (#titles) which is rotated along the X-axis using perspective to give the impression of depth. The same DIV also has an :after psuedo-element which applies a linear gradient so the text appears to fade out.</p>
-
- <p>Inside, we have another absolutely-positioned DIV which contains the text (#titlecontent). The top is set to 100% to ensure it starts off-screen then uses CSS3 animation to move it upward over time. No JavaScript is required.</p>
-
- <p>You will probably need to adjust the movement amount and timing depending on the quantity of text you want to show. The 3D depth can also be tweaked in the</p>
-
- <p>All the code is contained in this single HTML file</p>
-
- <p class="center">View the source, Luke!</p>
-
- <p>Sorry. Couldn't resist it.</p>
-
- <p>You're welcome to use this demonstration code in your own sites. Please link back to the original article at:</p>
-
- <p class="center"><a href="http://www.sitepoint.com/css3-starwars-scrolling-text/">sitepoint.com/<br />css3-starwars-scrolling-text/</a></p>
-
- <p>and give me a shout on Twitter <a href="http://twitter.com/craigbuckler">@craigbuckler</a> &ndash; I'd love to see how you use and abuse it!</p>
-
- <p>Finally, Han shot first and the original, unadulterated movies remain the best. Stop fiddling with them, George!</p>
-
-</div></div>
-
-<style>
- .titles {
-    position: absolute;
-    width: 18em;
-    height: 50em;
-    bottom: 0;
-    left: 50%;
-    margin-left: -9em;
-    font-size: 350%;
-    font-weight: bold;
-    text-align: justify;
-    overflow: hidden;
-    transform-origin: 50% 100%;
-    transform: perspective(300px) rotateX(25deg);
- }
- .titles:after {
-    position: absolute;
-    content: ' ';
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 60%;
-    background-image: linear-gradient(top, rgba(0,0,0,1) 0%, transparent 100%);
-    pointer-events: none;
- }
-</style>
+<img src="/img/beginning.jpg" class="container mx-auto">
 
 ---
 layout: default-5
@@ -101,9 +51,10 @@ layout: section-2
 
 # サ－ビス概要
 
- - 機能要件
-    - ユーザ・企業・接続元IPリストのCRUDをする
-    - ユーザを作る権限を持った企業外ユーザ（販売代理店等）を管理する
+機能要件
+
+- ユーザ・企業・接続元IPリストのCRUDをする
+- ユーザを作る権限を持った企業外ユーザ（販売代理店等）を管理する
 
 <v-click>
 
@@ -114,20 +65,19 @@ layout: section-2
 
 # サ－ビス概要
 
-- 非機能要件
-    - 別VPCのRDSを操作する
-    - 認証・認可
-        - OIDC
-        - 製品アクセスの有無により、ユーザプールを分割する
-    - マイクロサービスの開発・運用を効率化する
-        - 冪等性の考慮
-          - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンが実装不要になるアーキテクチャを考える
-        - アプリケーション実装をビジネス実装に集中させる <typcn-equals /> インフラレイヤーでなるべく巻き取る
-          - ログ振分け・サーキットブレイカー等
-        - モニタリングの一覧性
-    - セキュリティ最重視
-        - WAF
-        - AWSアカウント自体の管理
+非機能要件
+
+- 別VPCのRDSを操作する
+- 認証・認可 <bi-arrow-right-square-fill /> OIDC
+    - 製品アクセスの有無により、ユーザプールを分割する
+- マイクロサービスの開発・運用を効率化する
+    - 冪等性の考慮
+        - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンの実装が不要なアーキテクチャを考える
+    - アプリケーションでの処理をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外の処理はなるべくインフラで実装する
+        - ログ振分け・サーキットブレイカー等
+- セキュリティ最重視
+    - WAF
+    - AWSアカウント自体の管理
 
 ---
 layout: section-2
@@ -138,48 +88,62 @@ layout: section-2
 
 # [GitHub Beta Projects](https://github.com/features/issues/)で管理
 
-<div class="grid grid-cols-[50%,50%] gap-4">
-    <div>
-        <p>Discussions <bi-arrow-right-square-fill /> Issues <bi-arrow-right-square-fill /> Pull Requests の流れが最高</p>
-        <p>Discussions<br/>とりあえずの提案・バグか仕様か分からないので質問、等</p>
-        <p>Issues<br/>やることが決定したもの</p>
-        <p>Pull Requests<br/>実装のレビュー</p>
-        <p>IssuesやPull Requestsはテンプレートを設置</p>
-        <p>Issuesはボタン一つでテンプレートを使い分けられるように</p>
-    </div>
-    <div>
-        <img src="/img/github_discussions.png" width= "500">
-        <br/>
-        <img src="/img/github_issue_template.png" width= "500">
-    </div>
-</div>
+Discussions <bi-arrow-right-square-fill /> Issues <bi-arrow-right-square-fill /> Pull Requestsの流れが最高
+
+<v-click>
+
+- Discussions : とりあえずの提案・バグか仕様か分からないので質問、等
+
+<img src="/img/github_discussions.png" width= "450">
+
+</v-click>
+<v-click>
+
+- Issues : やることが決定したもの
+
+</v-click>
+<v-click>
+
+- Pull Requests : 実装のレビュー
+
+</v-click>
+<v-click>
+
+- テンプレートを設置し、ボタンでIssuesの複数テンプレートを使い分ける
+
+<img src="/img/github_issue_template.png" width= "450">
+
+</v-click>
+
 
 ---
 
 # [GitHub Beta Projects](https://github.com/features/issues/)で管理
 
-<div class="grid grid-cols-[50%,50%] gap-4">
-    <div>
-        <p>複数リポジトリのIssuesを一覧化</p>
-        <p>各マイクロサービスのリポジトリを一つ一つ見に行く必要がない</p>
-        <p>カスタムフィールドでPriorityを追加</p>
-        <p>Priority毎にグループ分けして表示</p>
-    </div>
-    <img src="/img/github_project.png" width= "500">
-</div>
+複数リポジトリのIssuesを一覧化
+
+<img src="/img/github_project.png" width= "650">
+
+<v-click>
+
+- 各マイクロサービスのリポジトリを1つ1つ見に行く必要がない
+- カスタムフィールドでPriorityを追加
+- Priority毎にグループ分けして表示
+
+</v-click>
 
 ---
 
 # [GitHub Beta Projects](https://github.com/features/issues/)で管理
 
-<div class="grid grid-cols-[50%,50%] gap-4">
+<div class="grid grid-cols-[35%,65%] gap-4">
     <div>
-        <p>JIRAのように扱うため、labelsで機能補完</p>
-        <p>closed, blocked by等、チケット間の関係性を表現</p>
-        <p>sortが奇麗になるよう、bug, enhance等の接頭辞を付与</p>
+        <p>JIRAのように扱うため、<br/>labelsで機能補完</p>
+        <p>closed, blocked by等、<br/>チケット間の関係性を表現</p>
+        <p>sortが奇麗になるよう、<br/>bug, enhance等の接頭辞を付与</p>
         <p>色の並びにも気を配った</p>
     </div>
-    <img src="/img/github_labels.png" width="370">
+    <img src="/img/github_labels.png" width="500">
 </div>
 
 ---
@@ -193,7 +157,7 @@ layout: section-2
 
 |     |     |
 | --- | --- |
-| <kbd>frontend</kbd> | <img src="/img/typescript.svg" width="70" class="inline-block p-4"><img src="/img/react.svg" width="150" class="inline-block p-4"><img src="/img/next.js.svg" width="100" class="inline-block p-4"><img src="/img/material_ui.svg" width="180" class="inline-block p-4"><img src="/img/vite.svg" width="100" class="inline-block p-4"> |
+| <kbd>frontend</kbd> | <img src="/img/typescript.svg" width="70" class="inline-block p-4"><img src="/img/next.js.svg" width="100" class="inline-block p-4"><img src="/img/material_ui.svg" width="160" class="inline-block p-4">|
 | <kbd>backend</kbd> | <img src="/img/rust.svg" width="80" class="inline-block p-4"><img src="/img/actixweb.jpg" width="150" class="inline-block p-4"> |
 | <kbd>CI/CD</kbd> | <img src="/img/github_actions.svg" width="100"> |
 | <kbd>認証・認可</kbd> | <img src="/img/auth0.svg" width="100"> |
@@ -205,16 +169,83 @@ layout: section-2
 |     |     |
 | --- | --- |
 | <kbd>frontend</kbd> | SSRに対応 |
-| <kbd>backend</kbd> | DDD指向・オニオンアーキテクチャで実装、リソースAPIではトークン検証処理を行う |
+| <kbd>backend</kbd> | DDD指向・オニオンアーキテクチャで実装<br/>リソースAPIではトークン検証処理を行う |
 | <kbd>CI/CD</kbd> | [aws謹製のGithub Actions](https://github.com/aws-actions)で実装 |
 | <kbd>認証・認可</kbd> | OIDCに則って各APIを構築 ・ [Organizations](https://auth0.com/docs/organizations)機能を使用（予定） |
 
 ---
 
-# 開発秘話
+# 開発秘話（frontend）
 
-TODO
-- 神谷さん、西坂さんに聞く
+- 元々の構成は<img src="/img/react.svg" width="200" class="inline-block p-4"><whh-plus /><img src="/img/vite.svg" width="100" class="inline-block p-4">
+- ユーザのロースペックなPC環境を考慮してSSR化を検討。<img src="/img/next.js.svg" width="150" class="inline-block p-4">に。
+    - vite.jsの構成から、next.jsの構成に移すのが大変だった
+    - ググってもjsの記事しか出てこない。tsの型指定が辛い。
+
+---
+
+# 開発秘話（backend）
+
+rustの型制約が激しい
+
+- アプリケーションレイヤーでもセキュリティを高める必要があり、<img src="/img/rust.svg" width="80" class="inline-block p-4">採用
+    - 異様に強い型制約、メモリ安全が魅力
+    - ロギング、トークン検証等をモジュール化し、アスペクト指向プログラミングを実施
+
+<v-click>
+
+- とはいえ、型制約が激しくてビルドが通らない。。。
+    - MySQLのテーブルでbool値を格納するカラムがtinyint(1)で作成されていた
+    - が、Rust側でintを指定すると、ビルドエラー
+
+</v-click>
+
+<v-click>
+
+- [Rust公式](https://docs.rs/sqlx/0.3.5/sqlx/mysql/types/index.html)によると、MySQLのtinyint(1)はRustではbool型と扱う、とのこと
+    - MySQL`int(11) unsigned `とRust`u16` であればエラーだが、MySQL`int(11) unsigned `とRust`u32` はエラーにならない
+
+</v-click>
+
+---
+
+# 開発秘話（backend）
+
+DDD
+
+- オニオンアーキテクチャを以下のように実装した
+    - ドメインモデル層: このシステムで扱うべき関心事
+    - ドメインサービス層: ドメインモデルのビジネスロジックを定義。アプリケーションサービス層から利用される共通ロジックを提供。
+    - アプリケーションサービス層: ユーザとの接点（エンドポイント等）を定義
+    - インフラストラクチャ層: 外部ライブラリ、DB等の接続
+
+<v-click>
+
+- 実装したモジュールをどの層に置くか
+    - SQL文の記述、AWS SDKはインフラストラクチャ層に。ドメインモデリングを阻害しないようにする。
+    - トークン検証はアプリケーションサービス層
+        - エンドポイント毎に検証スコープの範囲が違うため、ビジネスロジックにも思える
+        - アプリケーション固有の処理だが、ドメインに関する処理ではないので、アプリケーションサービス層に配置した
+
+</v-click>
+
+---
+
+# 開発秘話（backend）
+
+やっぱりrustの型制約が激しい
+
+- 型制約が激しくてDIが辛い。。。
+    - [goでinterface型を使う](https://qiita.com/hirotakan/items/698c1f5773a3cca6193e#interfacesdatabase--frameworks--drivers%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC)ような逃げ道がない。
+    - 依存関係を逆転しきれないことも。
+
+---
+
+# 開発秘話（backend）
+
+トークン検証
+
+- TODO
 
 ---
 layout: section-2
@@ -234,15 +265,17 @@ layout: section-2
 ## コンテナー・ネットワーク
 
 - AWS ECS on Fargate
+    - キャパシティープロバイダー戦略を設定し、FARGATE_SPOTを最大限使用
 - AWS ECR
+    - イメージスキャン
+    - ライフサイクルポリシー設定
 - AWS Application Load Balancer
 - AWS Firelens
-- AWS Cloudwatch Logs
 - AWS Cloud Map
 - AWS Route53
     - DNS SEC署名有効化
 - AWS App Mesh
-  - mTLS有効化
+    - VPC内通信もTLS有効化
 
 ---
 src: ./slides/real_resources.md
@@ -260,8 +293,8 @@ src: ./slides/real_resources.md
 ## [firelens](https://dev.classmethod.jp/articles/aws-fargate-with-firelens-minimum/)
 
 - awsがマネージドサービス用にカスタマイズしたfluent bit
-- log_routerコンテナーをサイドカー構成でecsタスクに同梱し、好きな場所にログ送信できる
-    - envoyのアクセスログはs3、アプリケーションログはcloudwatch logs、アクセスログうち特定のIPだけkinesis data firehose経由でAmazon OpenSearchに、等
+- log_routerコンテナーをサイドカー構成でecsタスクに同梱し、任意の場所にログ送信
+    - たとえば、envoyのアクセスログはs3へ、アプリケーションログはCloudwatch Logsへ、アクセスログのうち特定のクライアントからのログのみkinesis data firehose経由でAmazon OpenSearchへ等
 - 試されるfluent bit力
     - 全ログをとりあえずcloudwatch logsに出力中
     - Datadogにも出力して、可視性・一覧性を追求する
@@ -272,12 +305,25 @@ src: ./slides/real_resources.md
 
 # 開発秘話
 
+firelens
+
+
 - 今回の場合では、設定ファイル無しでfirelensを使える
-    - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、fluent bitの設定ファイルが必要という記事ばかり出てくるが、管理コスト。。。
-       - s3に置く、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
-    - ログ出力先が一ヶ所の場合のみ、タスク定義に記載したオプションを設定値としてfluent bitに渡せる
+    - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、タスク定義とは別にfluent bitの設定ファイルを用意する、という記事ばかりヒットする
+        - s3に配置する、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
+        - 管理コスト。。。
 
 <v-click>
+
+- ログ出力先が一ヶ所の場合のみ、タスク定義に記載したオプションを設定値としてfluent bitに渡せる
+
+</v-click>
+
+---
+
+# 開発秘話
+
+firelens
 
 - log_routerコンテナー自体のログ（Cloudwatch Logs）にDataAlreadyAcceptedExceptionエラーが出力され続ける
     - `The given batch of log events has already been accepted. The next batch can be sent with sequenceToken`のメッセージが、ECSタスクがリクエストを受け付ける毎に記録される
@@ -288,7 +334,6 @@ src: ./slides/real_resources.md
         - Matchパラメーターが複数設定され、ログの二重送信をCloudWatch Logsが拒否した結果、DataAlreadyAcceptedExceptionエラーが発生していた
     - AWSサポートに問い合わせて、解決まで2か月かかった。。。
 
-</v-click>
 
 ---
 src: ./slides/real_resources.md
@@ -313,63 +358,97 @@ src: ./slides/virtual_resources.md
 
 ---
 
-# 開発秘話
+# 開発秘話（App Mesh）
 
 マネコンで設定すると、誤ったデフォルト値が強制挿入される
 
-- AWSマネジメントコンソールでタスク定義を作成する際、App Mesh統合の有効化にチェックを入れると、App Meshで用いるenvoyイメージや必要な設定が自動挿入される
-    - 東京リージョンで自動設定されるイメージは`840364872350.dkr.ecr.ap-northeast-1.amazonaws.com/aws-appmesh-envoy:v1.19.1.0-prod`だった
-    - 挿入される情報の1つにコンテナー環境変数`APPMESH_VIRTUAL_NODE_NAME`があった
-
 <v-click>
 
-- だが、[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、イメージバージョン1.15.0以上は、環境変数`APPMESH_RESOURCE_ARN`を用いなければならない
+- AWSマネジメントコンソールでタスク定義を作成する際、App Mesh統合の有効化にチェックを入れると、App Meshで用いるenvoyイメージや必要な設定が自動挿入される
+    - envoyコンテナーに環境変数`APPMESH_VIRTUAL_NODE_NAME`が挿入される
+
+</v-click>
+<v-click>
+
+- 東京リージョンで自動設定されるイメージバージョンは`v1.19.1.0-prod`だったが、[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、1.15.0以上では環境変数`APPMESH_RESOURCE_ARN`が必要
     - バージョン1.19.1のイメージに`APPMESH_VIRTUAL_NODE_NAME`を追加すると、挙動が不安定になった
-       - `APPMESH_VIRTUAL_NODE_NAME`と`APPMESH_RESOURCE_ARN`を両方追加すると、envoyからappへの通信がconnection errorとなった
-- しかも、App Mesh統合の有効化にチェックを入れたとき、環境変数`APPMESH_VIRTUAL_NODE_NAME`を削除すると、エラーが出てタスク定義の保存に失敗する
+        - `APPMESH_VIRTUAL_NODE_NAME`と`APPMESH_RESOURCE_ARN`を両方追加すると、envoyからappへの通信がconnection errorとなった
+
+</v-click>
+<v-click>
+
+- さらに、App Mesh統合の有効化をチェックして、`APPMESH_VIRTUAL_NODE_NAME`を削除すると、エラーでタスク定義の保存に失敗する
     - App Mesh統合の有効化のチェックを外したうえで、`APPMESH_RESOURCE_ARN`のみが追加されるように、タスク定義のJSONを手で書くしかなかった
 
 </v-click>
 
 ---
 
-# 開発秘話
+# 開発秘話（App Mesh）
 
 朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
 
-- 原因は、アプリケーションのヘルスチェックエンドポイントのステータスが200でなかったこと。通信経路は以下。
+<div class="grid grid-cols-[47%,53%] gap-4"><div><v-click>
+
+- 原因は、appのヘルスチェックエンドポイントのステータスコードが200以外だったこと
+
+</v-click>
+<v-click>
+
+- 通信経路は以下
     1. Route53ホストゾーン
     2. ALB
     3. ターゲットグループ
     4. 仮想ゲートウェイのenvoyコンテナー
-    5. 仮想サービス、仮想ルーター
-    6. 仮想ノードのenvoyコンテナー
-    7. 仮想ノードのappコンテナー
-
-<v-click>
-
-- mesh内通信でステータスコードは書き換えられない <typcn-equals /> 3が受け取るステータスコードは7のもの
-    - 3のヘルスチェックに失敗するため、4にSIGTERMが送信される
-    - タスクにつき1コンテナーの起動だったため、4が停止してタスク数が0になる
-    - ECSサービスで最低タスク数を1と設定したため、新たなタスクが立ち上がる
+    5. 仮想サービス
+    6. 仮想ルーター
+    7. 仮想ノードのenvoyコンテナー
+    8. 仮想ノードのappコンテナー
 
 </v-click>
+</div>
+<div><v-click>
 
-<v-click>
-
-**無限ループ**
+- mesh内通信でステータスコードは書き換えられない <br/><typcn-equals /> ターゲットグループの受け取るステータスコードはappのもの
 
 </v-click>
+<v-click>
+
+- 200以外のステータスコードをターゲットグループが受け取ると、自身のヘルスチェックに失敗するため、仮想ゲートウェイにSIGTERMが送信される
+
+</v-click>
+<v-click>
+
+- タスクにつき1コンテナーの起動だったため、仮想ゲートウェイのenvoyコンテナーが停止してタスク数が0になる
+
+</v-click>
+<v-click>
+
+- ECSサービスで最低タスク数を1と設定したため、新たなタスクが立ち上がる
+
+</v-click>
+</div></div>
 
 ---
 
-# 開発秘話
+# 開発秘話（App Mesh）
+
+朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
+
+<img src="/img/mugen.jpg" width="800">
+
+---
+
+# 開発秘話（App Mesh）
 
 http2対応できない
 
-- actix webのAPI群への通信をhttp2にしたかったので、[公式](https://actix.rs/docs/http2/)にしたがって鍵を用意し、appをhttp2対応させた
+<v-click>
+
+- actix webのAPI群への通信をhttp2にしたかったので、[公式](https://actix.rs/docs/http2/)にしたがってtls暗号化し、appをhttp2対応させた
 - が、`upstream connect error or disconnect/reset before headers. reset reason: connection termination`というenvoyのエラーが出力される
 
+</v-click>
 <v-click>
 
 - awsサポート回答によると、↓とのこと
@@ -380,11 +459,17 @@ http2対応できない
 
 </v-click>
 
+---
+
+# 開発秘話（App Mesh）
+
+http2対応できない
+
+- [actix webの公式](https://actix.rs/docs/http2/)を見ても、tls暗号化せずにhttp2化する方法が見つからない。`actix-web automatically upgrades connections to HTTP/2 if possible.`と書いてはあるが、tls暗号化しないとactix webはhttp2にならなかった。
 
 <v-click>
 
-- 公式を見ても、tls暗号化せずにhttp2化する方法が見つからない。`actix-web automatically upgrades connections to HTTP/2 if possible.`と書いてはあるが、鍵を用意しないとactix webはhttp2にならなかった。
-- actix webをtls暗号化せずhttp2対応させる術が見つからず、app meshでのhttp2対応は諦めるという結論になった
+- actix webをtls暗号化せずにhttp2対応させる術が見つからず、app meshでのhttp2対応は諦めるという結論になった
 
 </v-click>
 
@@ -418,26 +503,38 @@ layout: default-5
 layout: section-2
 ---
 
-# 使用技術<br/>（Dockerfile未満）<br/>まだあるよ
+<div class="grid grid-cols-[65%,35%] gap-4">
+
+# 使用技術<br/>（Dockerfile未満）
+
+<v-click>
+<img src="/img/madaaruyo.png" width="700">
+</v-click>
+</div>
 
 ---
 
 # サ－ビス概要
 
-- 非機能要件
-    - 別VPCのRDSを操作する
-    - 認証・認可
-        - OIDC
-        - 製品アクセスの有無により、ユーザプールを分割する
-    - マイクロサービスの開発・運用を効率化する
-        - 冪等性の考慮
-          - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンが実装不要になるアーキテクチャを考える
-        - アプリケーション実装をビジネス実装に集中させる <typcn-equals /> インフラレイヤーでなるべく巻き取る
-          - ログ振分け・サーキットブレイカー等
-        - **モニタリングの一覧性**
-    - **セキュリティ最重視**
-        - **WAF**
-        - **AWSアカウント自体の管理**
+非機能要件
+
+- 別VPCのRDSを操作する
+- 認証・認可 <bi-arrow-right-square-fill /> OIDC
+    - 製品アクセスの有無により、ユーザプールを分割する
+- マイクロサービスの開発・運用を効率化する
+    - 冪等性の考慮
+        - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンの実装が不要なアーキテクチャを考える
+    - アプリケーションでの処理をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外の処理はなるべくインフラで実装する
+        - ログ振分け・サーキットブレイカー等
+
+<v-click>
+
+- **セキュリティ最重視**
+    - **WAF**
+    - **AWSアカウント自体の管理**
+
+</v-click>
+
 
 ---
 
@@ -448,15 +545,17 @@ layout: section-2
 ## コンテナー・ネットワーク
 
 - AWS ECS on Fargate
+    - キャパシティープロバイダー戦略を設定し、FARGATE_SPOTを最大限使用
 - AWS ECR
+    - イメージスキャン
+    - ライフサイクルポリシー設定
 - AWS Application Load Balancer
 - AWS Firelens
-- AWS Cloudwatch Logs
 - AWS Cloud Map
 - AWS Route53
     - DNS SEC署名有効化
 - AWS App Mesh
-  - mTLS有効化
+    - VPC内通信もTLS有効化
 
 </div>
 <v-click><div>
@@ -473,9 +572,9 @@ layout: section-2
 - AWS Macie
 - AWS KMSをきちんと管理
 - AWS IAMをきちんと管理
-    - きちんとIAMグループ作ってポリシー割当
-    - 各IAMユーザにパーミッションバウンダリを設定
-- [AWS BudgetsをChatbotでSlackに通知させてる](https://dev.classmethod.jp/articles/aws-budgets-alert-by-aws-chatbot/)
+    - IAMグループに対してポリシー割当
+    - パーミッションバウンダリ設定
+- [AWS BudgetsをChatbotでSlackに通知](https://dev.classmethod.jp/articles/aws-budgets-alert-by-aws-chatbot/)
 
 </div></v-click>
 </div>
@@ -485,7 +584,7 @@ src: ./slides/real_resources.md
 ---
 
 ---
-layout: default-6
+layout: default-3
 ---
 
 ## セキュリティ対策も追加
@@ -493,7 +592,7 @@ layout: default-6
 <img src="/img/add_security_resources.svg" width="560">
 
 ---
-layout: default-6
+layout: default-3
 ---
 
 ## dev環境のみの構成
@@ -549,7 +648,7 @@ layout: section-2
 
 - frontend管理
     - Storybook
-    - Cypress
+    - Cypress or Autify
 - WAF
     - Prisma Cloud
 - サービスメッシュ
