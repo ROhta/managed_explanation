@@ -364,14 +364,14 @@ src: ./slides/virtual_resources.md
 
 - AWSマネジメントコンソールでタスク定義を作成する際、App Mesh統合の有効化にチェックを入れると、App Meshで用いるenvoyイメージや必要な設定が自動挿入される
     - 東京リージョンで自動設定されるイメージバージョンは`v1.19.1.0-prod`だった
-    - envoyコンテナーに環境変数`APPMESH_VIRTUAL_NODE_NAME`が自動挿入される
+    - envoyコンテナーに環境変数`APPMESH_VIRTUAL_NODE_NAME`が挿入される
 
 <v-click>
 
-- だが[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、イメージバージョン1.15.0以上は、環境変数`APPMESH_RESOURCE_ARN`を用いなければならない
+- だが[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、バージョン1.15.0以上は、環境変数`APPMESH_RESOURCE_ARN`を用いなければならない
     - バージョン1.19.1のイメージに`APPMESH_VIRTUAL_NODE_NAME`を追加すると、挙動が不安定になった
         - `APPMESH_VIRTUAL_NODE_NAME`と`APPMESH_RESOURCE_ARN`を両方追加すると、envoyからappへの通信がconnection errorとなった
-- しかも、App Mesh統合の有効化にチェックを入れたとき、`APPMESH_VIRTUAL_NODE_NAME`を削除すると、エラーが出てタスク定義の保存に失敗する
+- しかも、App Mesh統合の有効化にチェックを入れて、`APPMESH_VIRTUAL_NODE_NAME`を削除すると、エラーでタスク定義の保存に失敗する
     - App Mesh統合の有効化のチェックを外したうえで、`APPMESH_RESOURCE_ARN`のみが追加されるように、タスク定義のJSONを手で書くしかなかった
 
 </v-click>
@@ -382,29 +382,41 @@ src: ./slides/virtual_resources.md
 
 朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
 
-- 原因は、アプリケーションのヘルスチェックエンドポイントのステータスコードが200でなかったこと。通信経路は以下。
+<div class="grid grid-cols-[35%,65%] gap-4">
+<div><v-click>
+
+- 原因は、アプリケーションのヘルスチェックエンドポイントのステータスコードが200でなかったこと
+
+</v-click>
+
+<v-click>
+
+- 通信経路は以下
     1. Route53ホストゾーン
     2. ALB
     3. ターゲットグループ
     4. 仮想ゲートウェイのenvoyコンテナー
-    5. 仮想サービス、仮想ルーター
-    6. 仮想ノードのenvoyコンテナー
-    7. 仮想ノードのappコンテナー
+    5. 仮想サービス
+    6. 仮想ルーター
+    7. 仮想ノードのenvoyコンテナー
+    8. 仮想ノードのappコンテナー
 
-<v-click>
+</v-click>
+</div>
+<div><v-click>
 
-- mesh内通信でステータスコードは書き換えられない <typcn-equals /> 3の受け取るステータスコードは7のもの
+- mesh内通信でステータスコードは書き換えられない <typcn-equals /> 3の受け取るステータスコードは8のもの
     - 3のヘルスチェックに失敗するため、4にSIGTERMが送信される
     - タスクにつき1コンテナーの起動だったため、4が停止してタスク数が0になる
     - ECSサービスで最低タスク数を1と設定したため、新たなタスクが立ち上がる
 
-</v-click>
+</v-click><v-click>
 
-<v-click>
-
-**無限ループ**
+## **無限ループ**
 
 </v-click>
+</div>
+</div>
 
 ---
 
@@ -414,9 +426,7 @@ http2対応できない
 
 - actix webのAPI群への通信をhttp2にしたかったので、[公式](https://actix.rs/docs/http2/)にしたがってtls暗号化し、appをhttp2対応させた
 - が、`upstream connect error or disconnect/reset before headers. reset reason: connection termination`というenvoyのエラーが出力される
-
 <v-click>
-
 - awsサポート回答によると、↓とのこと
     - [http2は、tls必須ではない](https://qiita.com/kitauji/items/3bf03533895251c93af2#httpsh2-%E3%81%A8-httph2c)
     - envoyへの通信とenvoy app間のプロトコルは一致させなければならない。envoyへはhttp2、envoy app間はhttp1.1というのはできない。
@@ -424,10 +434,7 @@ http2対応できない
     - appはtls暗号化せずhttp2対応しなくてはならない
 
 </v-click>
-
-
 <v-click>
-
 - [actix webの公式](https://actix.rs/docs/http2/)を見ても、tls暗号化せずにhttp2化する方法が見つからない。`actix-web automatically upgrades connections to HTTP/2 if possible.`と書いてはあるが、tls暗号化しないとactix webはhttp2にならなかった。
 - actix webをtls暗号化せずにhttp2対応させる術が見つからず、app meshでのhttp2対応は諦めるという結論になった
 
@@ -500,7 +507,7 @@ layout: section-2
 
 # 使用技術（Dockerfile未満）
 
-<div class="grid grid-cols-[48%,52%] gap-4"><div>
+<div class="grid grid-cols-[50%,50%] gap-4"><div>
 
 ## コンテナー・ネットワーク
 
@@ -533,7 +540,7 @@ layout: section-2
 - AWS KMSをきちんと管理
 - AWS IAMをきちんと管理
     - きちんとIAMグループ作ってポリシー割当
-    - 各IAMユーザにパーミッションバウンダリ設定
+    - きちんとパーミッションバウンダリ設定
 - [AWS BudgetsをChatbotでSlackに通知](https://dev.classmethod.jp/articles/aws-budgets-alert-by-aws-chatbot/)
 
 </div></v-click>
@@ -608,7 +615,7 @@ layout: section-2
 
 - frontend管理
     - Storybook
-    - Cypress
+    - Cypress or Autify
 - WAF
     - Prisma Cloud
 - サービスメッシュ
