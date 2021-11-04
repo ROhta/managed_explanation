@@ -72,8 +72,8 @@ layout: section-2
     - 製品アクセスの有無により、ユーザプールを分割する
 - マイクロサービスの開発・運用を効率化する
     - 冪等性の考慮
-        - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンが実装不要なアーキテクチャを考える
-    - アプリケーション実装をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外はインフラでなるべく巻き取る
+        - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンの実装が不要なアーキテクチャを考える
+    - アプリケーション実装をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外の処理はなるべくインフラで実装する
         - ログ振分け・サーキットブレイカー等
 - セキュリティ最重視
     - WAF
@@ -138,9 +138,9 @@ Discussions <bi-arrow-right-square-fill /> Issues <bi-arrow-right-square-fill />
 
 <div class="grid grid-cols-[35%,65%] gap-4">
     <div>
-        <p>JIRAのように扱うため、labelsで機能補完</p>
-        <p>closed, blocked by等、チケット間の関係性を表現</p>
-        <p>sortが奇麗になるよう、bug, enhance等の接頭辞を付与</p>
+        <p>JIRAのように扱うため、<br/>labelsで機能補完</p>
+        <p>closed, blocked by等、<br/>チケット間の関係性を表現</p>
+        <p>sortが奇麗になるよう、<br/>bug, enhance等の接頭辞を付与</p>
         <p>色の並びにも気を配った</p>
     </div>
     <img src="/img/github_labels.png" width="500">
@@ -294,7 +294,7 @@ src: ./slides/real_resources.md
 
 - awsがマネージドサービス用にカスタマイズしたfluent bit
 - log_routerコンテナーをサイドカー構成でecsタスクに同梱し、任意の場所にログ送信
-    - envoyのアクセスログはs3へ、アプリケーションログはcloudwatch logsへ、アクセスログのうち特定のIPからのログだけkinesis data firehose経由でAmazon OpenSearchに、等
+    - たとえば、envoyのアクセスログはs3へ、アプリケーションログはCloudwatch Logsへ、アクセスログのうち特定のIPからのログのみkinesis data firehose経由でAmazon OpenSearchへ等
 - 試されるfluent bit力
     - 全ログをとりあえずcloudwatch logsに出力中
     - Datadogにも出力して、可視性・一覧性を追求する
@@ -309,7 +309,7 @@ firelens
 
 
 - 今回の場合では、設定ファイル無しでfirelensを使える
-    - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、タスク定義とは別に、fluent bitの設定ファイルが別途必要という記事ばかりヒットする
+    - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、タスク定義とは別にfluent bitの設定ファイルを用意する、という記事ばかりヒットする
         - s3に配置する、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
         - 管理コスト。。。
 
@@ -371,7 +371,7 @@ src: ./slides/virtual_resources.md
 - だが[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、バージョン1.15.0以上は、環境変数`APPMESH_RESOURCE_ARN`を用いなければならない
     - バージョン1.19.1のイメージに`APPMESH_VIRTUAL_NODE_NAME`を追加すると、挙動が不安定になった
         - `APPMESH_VIRTUAL_NODE_NAME`と`APPMESH_RESOURCE_ARN`を両方追加すると、envoyからappへの通信がconnection errorとなった
-- しかも、App Mesh統合の有効化にチェックを入れて、`APPMESH_VIRTUAL_NODE_NAME`を削除すると、エラーでタスク定義の保存に失敗する
+- さらに、App Mesh統合の有効化をチェックして、`APPMESH_VIRTUAL_NODE_NAME`を削除すると、エラーでタスク定義の保存に失敗する
     - App Mesh統合の有効化のチェックを外したうえで、`APPMESH_RESOURCE_ARN`のみが追加されるように、タスク定義のJSONを手で書くしかなかった
 
 </v-click>
@@ -382,7 +382,7 @@ src: ./slides/virtual_resources.md
 
 朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
 
-<div class="grid grid-cols-[35%,65%] gap-4"><div><v-click>
+<div class="grid grid-cols-[40%,60%] gap-4"><div><v-click>
 
 - 原因は、アプリケーションのヘルスチェックエンドポイントのステータスコードが200でなかったこと
 
@@ -434,12 +434,15 @@ http2対応できない
     - appはtls暗号化せずhttp2対応しなくてはならない
 
 </v-click>
-<v-click>
+
+---
+
+# 開発秘話（App Mesh）
+
+http2対応できない
 
 - [actix webの公式](https://actix.rs/docs/http2/)を見ても、tls暗号化せずにhttp2化する方法が見つからない。`actix-web automatically upgrades connections to HTTP/2 if possible.`と書いてはあるが、tls暗号化しないとactix webはhttp2にならなかった。
 - actix webをtls暗号化せずにhttp2対応させる術が見つからず、app meshでのhttp2対応は諦めるという結論になった
-
-</v-click>
 
 ---
 src: ./slides/virtual_resources.md
@@ -491,8 +494,8 @@ layout: section-2
     - 製品アクセスの有無により、ユーザプールを分割する
 - マイクロサービスの開発・運用を効率化する
     - 冪等性の考慮
-        - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンが実装不要なアーキテクチャを考える
-    - アプリケーション実装をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外はインフラでなるべく巻き取る
+        - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンの実装が不要なアーキテクチャを考える
+    - アプリケーション実装をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外の処理はなるべくインフラで実装する
         - ログ振分け・サーキットブレイカー等
 
 <v-click>
@@ -540,8 +543,8 @@ layout: section-2
 - AWS Macie
 - AWS KMSをきちんと管理
 - AWS IAMをきちんと管理
-    - きちんとIAMグループ作ってポリシー割当
-    - きちんとパーミッションバウンダリ設定
+    - IAMグループに対してポリシー割当
+    - パーミッションバウンダリ設定
 - [AWS BudgetsをChatbotでSlackに通知](https://dev.classmethod.jp/articles/aws-budgets-alert-by-aws-chatbot/)
 
 </div></v-click>
