@@ -171,7 +171,7 @@ layout: section-2
 | <kbd>frontend</kbd> | SSRに対応 |
 | <kbd>backend</kbd> | DDD指向・オニオンアーキテクチャで実装<br/>リソースAPIではトークン検証処理を行う |
 | <kbd>CI/CD</kbd> | [aws謹製のGithub Actions](https://github.com/aws-actions)で実装 |
-| <kbd>認証・認可</kbd> | OIDCに則って各APIを構築 ・ [Organizations](https://auth0.com/docs/organizations)機能を使用（予定） |
+| <kbd>認証・認可</kbd> | OIDCに則って各APIを構築 ・ [Organizations](https://auth0.com/docs/organizations)機能（予定）|
 
 ---
 
@@ -237,7 +237,75 @@ DDD
 
 - 型制約が激しくてDIが辛い。。。
     - [goでinterface型を使う](https://qiita.com/hirotakan/items/698c1f5773a3cca6193e#interfacesdatabase--frameworks--drivers%E3%83%AC%E3%82%A4%E3%83%A4%E3%83%BC)ような逃げ道がない。
-    - 依存関係を逆転しきれないことも。
+    - 依存関係を逆転しきれないことも
+
+<v-click>
+
+- オニオンアーキテクチャの各層をモジュール化して、依存関係逆転の法則を実装する
+    - 頑張る
+
+</v-click>
+
+
+---
+
+# 開発秘話（backend）
+
+APIドキュメント管理
+
+- 当初はOpenAPIに則ろうとした
+    - ドキュメントもgit管理したいし、ドキュメントとコードの連携も取りたい
+    - だが、Swagger Editorを使うとソースコードと設定ファイルが分離するため、いずれ整合性が取れなくなる
+
+<v-click>
+
+- 要件をまとめると
+    - ドキュメントのgit管理
+    - コードからドキュメントの生成
+    - ドキュメントからコードの生成
+    - ドキュメントの設定ファイルがソースコードから独立していない
+    - 独自フレームワークを持たない
+        - オニオンアーキテクチャに影響を与えない、受けない
+    - 簡便なホスティング
+
+</v-click>
+
+---
+
+# 開発秘話（backend）
+
+APIドキュメント管理
+
+- 意外と要件に合致するものはなかった
+
+<v-click>
+
+- ホスティングはGitHub Pagesでよい
+- Rust Docで、ドキュメントからコードの生成以外の要件は実現可能
+    - ドメインモデル層でレスポンスを定義
+    - アプリケーションサービス層のソースコードにパラメーターに関するコメントを記載
+
+</v-click>
+<v-click>
+
+**Rust Doc + GitHub Pages**
+
+</v-click>
+<v-click>
+
+- 以下の前提があれば、ソースコード上のコメントをAPIドキュメントとして機能させられる
+    - 外部公開しない
+    - フロントエンドのメンバーもrustを読める
+
+</v-click>
+
+---
+
+# 開発秘話（backend）
+
+APIドキュメント管理
+
+<img src="/img/docs.png" width="650">
 
 ---
 
@@ -245,7 +313,113 @@ DDD
 
 トークン検証
 
-- TODO
+よくあるpemを使ったdecode処理
+
+```rust {1|2-3|5|6-8|all}
+use jsonwebtoken::{TokenData, DecodingKey, Validation, decode};
+fn decode_jwt(jwt: &str, secret: &str) ->
+    Result<TokenData<Claims>, jsonwebtoken::errors::Error> {
+
+    let secret = std::env::var(secret).expect("secret is not set");
+    decode::<Claims>(
+        jwt, &DecodingKey::from_secret(secret.as_ref()),
+        &Validation::default())
+}
+```
+
+<v-click>
+
+が、今回必要なトークン検証はpemを使った処理ではなく、<br/>
+Auth0発行のJWKSから`kid`に基づいて該当のJWTを探し、`n` `e` でデコードする処理
+
+</v-click>
+
+---
+
+# 開発秘話（backend）
+
+トークン検証
+
+1. ヘッダーの`kid` をもとに複数のJWKSの中から一致する`kid`を見つけ、JWTを特定
+
+```rust {1|2|4,5|7-13|15}
+pub fn find_from_kid(jwks: Jwks, kid: &str) -> Result<JwtKey, JwksError> {
+    let length = jwks.keys.len();
+
+    let mut index: usize = 0;
+    let mut is_exists: bool = false;
+
+    for i in 0..length {
+        if jwks.keys[i].kid == kid {
+            is_exists = true;
+            index = i;
+            break;
+        }
+    }
+
+// 次ページに続く
+```
+
+---
+
+# 開発秘話（backend）
+
+トークン検証
+
+```rust {1|3|4-13|14-16|all}
+// 全ページから続く
+
+    if is_exists == true {
+        Ok(JwtKey {
+            alg: jwks.keys[index].alg.to_owned(),
+            kty: jwks.keys[index].kty.to_owned(),
+            r#use: jwks.keys[index].r#use.to_owned(),
+            n: jwks.keys[index].n.to_owned(),
+            e: jwks.keys[index].e.to_owned(),
+            kid: jwks.keys[index].kid.to_owned(),
+            x5t: jwks.keys[index].x5t.to_owned(),
+            x5c: jwks.keys[index].x5c.to_owned(),
+        })
+    } else {
+        Err(JwksError)
+    }
+}
+```
+<v-click>
+
+- JWKのパラメーターは、[JWTハンドブック](https://assets.ctfassets.net/2ntc334xpx65/5HColfm15cUhMmDQnupNzd/30d5913d94e79462043f6d8e3f557351/jwt-handbook-jp.pdf)の6,7章が詳しい
+- 今回はRSA公開鍵を用いるので、その際の[必須パラメーターの`n`と`e`](https://openid-foundation-japan.github.io/rfc7638.ja.html#Example)も追加した
+
+</v-click>
+
+---
+
+# 開発秘話（backend）
+
+トークン検証
+
+2.　JWTから該当の`n`と`e`を使い、トークン検証
+
+```rust {1-4|6|7-12|13-17}
+let jwt = match kid {
+    Some(v) => auth0_token::find_from_kid(self.jwks.clone(), &v),
+    None => panic!("something wrong with auth0 token"),
+};
+
+let val = match jsonwebtoken::decode::<Claims>(
+    result,
+    &DecodingKey::from_rsa_components(
+        &jwt.as_ref().unwrap().n,
+        &jwt.as_ref().unwrap().e
+    ),
+    &Validation::new(Algorithm::RS256),
+) {
+    Ok(v) => Some(v),
+    Err(err) => match *err.kind() {
+        _ => return Box::pin(ready(Err(JwtAuthError::Unauthorized.into()))),
+    },
+};
+```
 
 ---
 layout: section-2
@@ -296,34 +470,41 @@ src: ./slides/real_resources.md
 - log_routerコンテナーをサイドカー構成でecsタスクに同梱し、任意の場所にログ送信
     - たとえば、envoyのアクセスログはs3へ、アプリケーションログはCloudwatch Logsへ、アクセスログのうち特定のクライアントからのログのみkinesis data firehose経由でAmazon OpenSearchへ等
 - 試されるfluent bit力
-    - 全ログをとりあえずcloudwatch logsに出力中
+    - 全ログをとりあえずcloudwatch logsに出力した
     - Datadogにも出力して、可視性・一覧性を追求する
 
 </v-click>
 
 ---
 
-# 開発秘話
+# 開発秘話（firelens）
 
-firelens
+設定ファイルを管理したくない
 
 
-- 今回の場合では、設定ファイル無しでfirelensを使える
-    - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、タスク定義とは別にfluent bitの設定ファイルを用意する、という記事ばかりヒットする
-        - s3に配置する、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
-        - 管理コスト。。。
+- [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、タスク定義とは別にfluent bitの設定ファイルを用意する、という記事ばかりヒットする
+    - s3に配置、設定ファイルをコンテナー内で読み込むようDockerfileを編集、等
+    - 管理コスト。。。
 
 <v-click>
 
 - ログ出力先が一ヶ所の場合のみ、タスク定義に記載したオプションを設定値としてfluent bitに渡せる
+    - 今回の場合では、設定ファイル無しでfirelensを使える
+
+</v-click>
+<v-click>
+
+- タスク全体でログ出力先を一ヶ所にまとめるのではない
+    - コンテナー毎に一ヶ所
+    - envoyのアクセスログはdatadog、アプリケーションログはcloudwatch logs、のような振分けが可能
 
 </v-click>
 
 ---
 
-# 開発秘話
+# 開発秘話（firelens）
 
-firelens
+DataAlreadyAcceptedExceptionエラー
 
 - log_routerコンテナー自体のログ（Cloudwatch Logs）にDataAlreadyAcceptedExceptionエラーが出力され続ける
     - `The given batch of log events has already been accepted. The next batch can be sent with sequenceToken`のメッセージが、ECSタスクがリクエストを受け付ける毎に記録される
@@ -333,7 +514,6 @@ firelens
         - [fluent bit公式](https://docs.fluentbit.io/manual/pipeline/outputs/cloudwatch)を参考に、タスク定義のlogConfigurationで`"Match": "*"` を設定した
         - Matchパラメーターが複数設定され、ログの二重送信をCloudWatch Logsが拒否した結果、DataAlreadyAcceptedExceptionエラーが発生していた
     - AWSサポートに問い合わせて、解決まで2か月かかった。。。
-
 
 ---
 src: ./slides/real_resources.md
@@ -469,7 +649,8 @@ http2対応できない
 
 <v-click>
 
-- actix webをtls暗号化せずにhttp2対応させる術が見つからず、app meshでのhttp2対応は諦めるという結論になった
+- actix webをtls暗号化せずにhttp2対応させる術が見つからず、app meshで仮想ノード間のhttp2対応は諦めるという結論になった
+    - その後、クライアントと仮想ゲートウェイ間のhttp2化には成功した
 
 </v-click>
 
@@ -484,7 +665,7 @@ layout: default-5
 - 各ECSサービスはタスクに以下のコンテナーを持つ
     - log_router
     - envoy
-    - datadog agent（予定）
+    - datadog agent
     - app
 
 <v-click>
@@ -603,9 +784,14 @@ layout: default-3
 
 ## モニタリング（トレース）
 
-- AWS XRayを使いたかった
-    - rust用のXRay SDKがないので、トレース用データを送信できない。。。
-- Datadog agentでトレースする（予定）
+- Datadog agentが簡単
+
+<v-click>
+
+- AWS XRayもやりたい
+    - [rustのXRay SDK](https://github.com/awslabs/aws-sdk-rust/tree/main/sdk/xray)はα版
+
+</v-click>
 
 ## モニタリング（ログ）
 
