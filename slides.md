@@ -243,9 +243,196 @@ DDD
 
 # 開発秘話（backend）
 
+APIドキュメント管理
+
+- 当初はOpenAPIに則ろうとした
+    - ドキュメントもgit管理したいし、ドキュメントとコードの連携も取りたい
+    - だが、Swagger Editorを使うとソースコードと設定ファイルが分離するため、近い将来整合性が取れなくなる
+
+<v-click>
+
+- 要件をまとめると
+    - ドキュメントのgit管理
+    - コードからドキュメントの生成
+    - ドキュメントからコードの生成
+    - ドキュメントの設定ファイルがソースコードから独立していない
+    - 独自フレームワークを持たない
+        - オニオンアーキテクチャに影響を与えない、受けない
+    - 簡易なホスティング
+
+</v-click>
+
+---
+
+# 開発秘話（backend）
+
+APIドキュメント管理
+
+- 意外と要件に合致するものはなかった
+
+<v-click>
+
+- ホスティングはGitHub Pagesでよい
+- Rust Docで、ドキュメントからコードの生成以外の要件は実現可能
+    - ドメイン層でレスポンスを定義
+    - プレゼンテーション層のソースコードにパラメーターに関するコメントを記載
+
+</v-click>
+<v-click>
+
+**Rust Doc + GitHub Pages**
+
+</v-click>
+<v-click>
+
+- 以下の前提があれば、ソースコード上のコメントをAPIドキュメントとして機能させられる
+    - 外部公開しない
+    - フロントエンドのメンバーもrustを読める
+
+</v-click>
+
+---
+
+# 開発秘話（backend）
+
+APIドキュメント管理
+
+<img src="/img/docs.png" width="650">
+
+---
+
+# 開発秘話（backend）
+
 トークン検証
 
-- TODO
+- T- ネット上に転がっているのはpemファイルを使ったトークン検証
+- Auth0の公式ブログがRustを使ったトークン検証方法を出していたが使用しているライブラリは長い期間メンテされていない
+
+と理由でAuth0のドキュメントを読むと試行錯誤の日々が続いた
+
+
+
+意外にも早い段階でトークン検証の処理は完成した
+
+今回必要なトークン検証処理ははpemを使った処理ではなく
+
+Auth0から渡されたJWKSからの該当するJWTを探し `kid`, `n` , `e` を使って デコードする必要があった。
+
+before
+
+```rust
+use jsonwebtoken::{TokenData, DecodingKey, Validation, decode};
+fn decode_jwt(jwt: &str, secret: &str) -> Result<TokenData<Claims>, jsonwebtoken::errors::Error> {
+    let secret = std::env::var(secret).expect("secret is not set");
+    decode::<Claims>(
+        jwt, &DecodingKey::from_secret(secret.as_ref()),
+        &Validation::default())
+}
+```
+
+after
+
+処理1 ヘッダーから得た`kid` をもとに複数あるJWKSの中から一致した`kid`を見つけJWTを特定する
+
+```rust
+pub fn find_from_kid(jwks: Jwks, kid: &str) -> Result<JwtKey, JwksError> {
+    let length = jwks.keys.len();
+
+    let mut index: usize = 0;
+    let mut is_exists: bool = false;
+
+    for i in 0..length {
+        if jwks.keys[i].kid == kid {
+            is_exists = true;
+            index = i;
+            break;
+        }
+    }
+
+    if is_exists == true {
+        Ok(JwtKey {
+            alg: jwks.keys[index].alg.to_owned(),
+            kty: jwks.keys[index].kty.to_owned(),
+            r#use: jwks.keys[index].r#use.to_owned(),
+            n: jwks.keys[index].n.to_owned(),
+            e: jwks.keys[index].e.to_owned(),
+            kid: jwks.keys[index].kid.to_owned(),
+            x5t: jwks.keys[index].x5t.to_owned(),
+            x5c: jwks.keys[index].x5c.to_owned(),
+        })
+    } else {
+        Err(JwksError)
+    }
+}
+```
+
+
+
+処理2　JWTから該当の`n`と`e`を使いトークンの検証を行う
+
+```rust
+let jwt = match kid {
+	Some(v) => auth0_token::find_from_kid(self.jwks.clone(), &v),
+    None => panic!("something wrong"),
+};
+
+let val = match jsonwebtoken::decode::<Claims>(
+	result,
+	&DecodingKey::from_rsa_components(&jwt.as_ref().unwrap().n, &jwt.as_ref().unwrap().e),
+    &Validation::new(Algorithm::RS256),
+) {
+	Ok(v) => Some(v),
+    Err(err) => match *err.kind() {
+    	_ => return Box::pin(ready(Err(JwtAuthError::Unauthorised.into()))),
+   	},
+};
+```
+
+
+
+ここで終われたらハッピーであったがまだまだ問題があった。
+
+
+
+この処理を各エンドポイントに到達する前に処理する必要がある。
+
+たとえ、この関数群を共通化して各エンドポイントごとに呼び出していたら
+
+記載忘れの事故が起きる可能性があるためである。
+
+
+
+いざactixwebに取り込んで実装となると色々と~~面倒な~~処理が必要になり、自分でmiddlewareを自作する必要があった。
+
+
+
+悩みに悩んだmiddlewareの処理
+
+正直良く分かっていない、雰囲気でRustを書いている
+
+```rust
+impl<S, B> Service<ServiceRequest> for JwtAuthService<S>
+where
+    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
+    S::Future: 'static,
+    B: MessageBody,
+    B: 'static,
+{
+    type Response = S::Response;
+    type Error = S::Error;
+    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
+
+    fn poll_ready(&self, ctx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        self.service.poll_ready(ctx)
+    }
+////////~~~~~~~~~~~~
+    Box::pin(ready(Err(JwtAuthError::Unauthorised.into())))
+}
+```
+
+
+
+唐突where 文という構文が出てトレイト境界、ライフタイムを明確に実装する必要があり
 
 ---
 layout: section-2
@@ -296,7 +483,7 @@ src: ./slides/real_resources.md
 - log_routerコンテナーをサイドカー構成でecsタスクに同梱し、任意の場所にログ送信
     - たとえば、envoyのアクセスログはs3へ、アプリケーションログはCloudwatch Logsへ、アクセスログのうち特定のクライアントからのログのみkinesis data firehose経由でAmazon OpenSearchへ等
 - 試されるfluent bit力
-    - 全ログをとりあえずcloudwatch logsに出力中
+    - 全ログをとりあえずcloudwatch logsに出力した
     - Datadogにも出力して、可視性・一覧性を追求する
 
 </v-click>
@@ -309,7 +496,7 @@ src: ./slides/real_resources.md
 
 
 - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、タスク定義とは別にfluent bitの設定ファイルを用意する、という記事ばかりヒットする
-    - s3に配置する、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
+    - s3に配置、設定ファイルをコンテナー内で読み込むようDockerfileを編集、等
     - 管理コスト。。。
 
 <v-click>
@@ -476,7 +663,7 @@ http2対応できない
 <v-click>
 
 - actix webをtls暗号化せずにhttp2対応させる術が見つからず、app meshで仮想ノード間のhttp2対応は諦めるという結論になった
-- その後、クライアントと仮想ゲートウェイ間のhttp2化には成功した
+    - その後、クライアントと仮想ゲートウェイ間のhttp2化には成功した
 
 </v-click>
 
