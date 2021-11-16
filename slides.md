@@ -305,22 +305,9 @@ APIドキュメント管理
 
 トークン検証
 
-- T- ネット上に転がっているのはpemファイルを使ったトークン検証
-- Auth0の公式ブログがRustを使ったトークン検証方法を出していたが使用しているライブラリは長い期間メンテされていない
+よくあるpemを使ったdecode処理
 
-と理由でAuth0のドキュメントを読むと試行錯誤の日々が続いた
-
-
-
-意外にも早い段階でトークン検証の処理は完成した
-
-今回必要なトークン検証処理ははpemを使った処理ではなく
-
-Auth0から渡されたJWKSからの該当するJWTを探し `kid`, `n` , `e` を使って デコードする必要があった。
-
-before
-
-```rust
+```rust {all|1|2|3|4-6}
 use jsonwebtoken::{TokenData, DecodingKey, Validation, decode};
 fn decode_jwt(jwt: &str, secret: &str) -> Result<TokenData<Claims>, jsonwebtoken::errors::Error> {
     let secret = std::env::var(secret).expect("secret is not set");
@@ -330,11 +317,22 @@ fn decode_jwt(jwt: &str, secret: &str) -> Result<TokenData<Claims>, jsonwebtoken
 }
 ```
 
-after
+<v-click>
 
-処理1 ヘッダーから得た`kid` をもとに複数あるJWKSの中から一致した`kid`を見つけJWTを特定する
+が、今回必要なトークン検証はpemを使った処理ではなく、<br/>
+Auth0発行のJWKSから`kid`に基づいて該当のJWTを探し、`n` `e` でデコードする処理
 
-```rust
+</v-click>
+
+---
+
+# 開発秘話（backend）
+
+トークン検証
+
+1. ヘッダーの`kid` をもとに複数のJWKSの中から一致する`kid`を見つけ、JWTを特定
+
+```rust {1|2|4,5|7-13|15}
 pub fn find_from_kid(jwks: Jwks, kid: &str) -> Result<JwtKey, JwksError> {
     let length = jwks.keys.len();
 
@@ -348,6 +346,18 @@ pub fn find_from_kid(jwks: Jwks, kid: &str) -> Result<JwtKey, JwksError> {
             break;
         }
     }
+
+// 次ページに続く
+```
+
+---
+
+# 開発秘話（backend）
+
+トークン検証
+
+```rust {1|3|4-13|14-16|all}
+// 全ページから続く
 
     if is_exists == true {
         Ok(JwtKey {
@@ -365,74 +375,38 @@ pub fn find_from_kid(jwks: Jwks, kid: &str) -> Result<JwtKey, JwksError> {
     }
 }
 ```
+<v-click>
 
+- JWKのパラメーターは、[JWTハンドブック](https://assets.ctfassets.net/2ntc334xpx65/5HColfm15cUhMmDQnupNzd/30d5913d94e79462043f6d8e3f557351/jwt-handbook-jp.pdf)の6,7章が詳しい
+- 今回はRSA公開鍵を用いるので、その際の[必須パラメーターである`n`と`e`](https://openid-foundation-japan.github.io/rfc7638.ja.html#Example)も追加している
 
+</v-click>
 
-処理2　JWTから該当の`n`と`e`を使いトークンの検証を行う
+---
 
-```rust
+# 開発秘話（backend）
+
+トークン検証
+
+2.　JWTから該当の`n`と`e`を使い、トークン検証
+
+```rust {1-4|6|7-9|10-14|all}
 let jwt = match kid {
-	Some(v) => auth0_token::find_from_kid(self.jwks.clone(), &v),
-    None => panic!("something wrong"),
+    Some(v) => auth0_token::find_from_kid(self.jwks.clone(), &v),
+    None => panic!("something wrong with auth0 token"),
 };
 
 let val = match jsonwebtoken::decode::<Claims>(
-	result,
-	&DecodingKey::from_rsa_components(&jwt.as_ref().unwrap().n, &jwt.as_ref().unwrap().e),
+    result,
+    &DecodingKey::from_rsa_components(&jwt.as_ref().unwrap().n, &jwt.as_ref().unwrap().e),
     &Validation::new(Algorithm::RS256),
 ) {
-	Ok(v) => Some(v),
+    Ok(v) => Some(v),
     Err(err) => match *err.kind() {
-    	_ => return Box::pin(ready(Err(JwtAuthError::Unauthorised.into()))),
-   	},
+        _ => return Box::pin(ready(Err(JwtAuthError::Unauthorised.into()))),
+    },
 };
 ```
-
-
-
-ここで終われたらハッピーであったがまだまだ問題があった。
-
-
-
-この処理を各エンドポイントに到達する前に処理する必要がある。
-
-たとえ、この関数群を共通化して各エンドポイントごとに呼び出していたら
-
-記載忘れの事故が起きる可能性があるためである。
-
-
-
-いざactixwebに取り込んで実装となると色々と~~面倒な~~処理が必要になり、自分でmiddlewareを自作する必要があった。
-
-
-
-悩みに悩んだmiddlewareの処理
-
-正直良く分かっていない、雰囲気でRustを書いている
-
-```rust
-impl<S, B> Service<ServiceRequest> for JwtAuthService<S>
-where
-    S: Service<ServiceRequest, Response = ServiceResponse<B>, Error = Error>,
-    S::Future: 'static,
-    B: MessageBody,
-    B: 'static,
-{
-    type Response = S::Response;
-    type Error = S::Error;
-    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>>>>;
-
-    fn poll_ready(&self, ctx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
-        self.service.poll_ready(ctx)
-    }
-////////~~~~~~~~~~~~
-    Box::pin(ready(Err(JwtAuthError::Unauthorised.into())))
-}
-```
-
-
-
-唐突where 文という構文が出てトレイト境界、ライフタイムを明確に実装する必要があり
 
 ---
 layout: section-2
