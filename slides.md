@@ -247,7 +247,7 @@ APIドキュメント管理
 
 - 当初はOpenAPIに則ろうとした
     - ドキュメントもgit管理したいし、ドキュメントとコードの連携も取りたい
-    - だが、Swagger Editorを使うとソースコードと設定ファイルが分離するため、近い将来整合性が取れなくなる
+    - だが、Swagger Editorを使うとソースコードと設定ファイルが分離するため、いずれ整合性が取れなくなる
 
 <v-click>
 
@@ -258,7 +258,7 @@ APIドキュメント管理
     - ドキュメントの設定ファイルがソースコードから独立していない
     - 独自フレームワークを持たない
         - オニオンアーキテクチャに影響を与えない、受けない
-    - 簡易なホスティング
+    - 簡便なホスティング
 
 </v-click>
 
@@ -307,9 +307,11 @@ APIドキュメント管理
 
 よくあるpemを使ったdecode処理
 
-```rust {all|1|2|3|4-6}
+```rust {1|2-3|5|6-8|all}
 use jsonwebtoken::{TokenData, DecodingKey, Validation, decode};
-fn decode_jwt(jwt: &str, secret: &str) -> Result<TokenData<Claims>, jsonwebtoken::errors::Error> {
+fn decode_jwt(jwt: &str, secret: &str) ->
+    Result<TokenData<Claims>, jsonwebtoken::errors::Error> {
+
     let secret = std::env::var(secret).expect("secret is not set");
     decode::<Claims>(
         jwt, &DecodingKey::from_secret(secret.as_ref()),
@@ -378,7 +380,7 @@ pub fn find_from_kid(jwks: Jwks, kid: &str) -> Result<JwtKey, JwksError> {
 <v-click>
 
 - JWKのパラメーターは、[JWTハンドブック](https://assets.ctfassets.net/2ntc334xpx65/5HColfm15cUhMmDQnupNzd/30d5913d94e79462043f6d8e3f557351/jwt-handbook-jp.pdf)の6,7章が詳しい
-- 今回はRSA公開鍵を用いるので、その際の[必須パラメーターである`n`と`e`](https://openid-foundation-japan.github.io/rfc7638.ja.html#Example)も追加している
+- 今回はRSA公開鍵を用いるので、その際の[必須パラメーターの`n`と`e`](https://openid-foundation-japan.github.io/rfc7638.ja.html#Example)も追加した
 
 </v-click>
 
@@ -390,7 +392,7 @@ pub fn find_from_kid(jwks: Jwks, kid: &str) -> Result<JwtKey, JwksError> {
 
 2.　JWTから該当の`n`と`e`を使い、トークン検証
 
-```rust {1-4|6|7-9|10-14|all}
+```rust {1-4|6|7-12|13-17}
 let jwt = match kid {
     Some(v) => auth0_token::find_from_kid(self.jwks.clone(), &v),
     None => panic!("something wrong with auth0 token"),
@@ -398,12 +400,15 @@ let jwt = match kid {
 
 let val = match jsonwebtoken::decode::<Claims>(
     result,
-    &DecodingKey::from_rsa_components(&jwt.as_ref().unwrap().n, &jwt.as_ref().unwrap().e),
+    &DecodingKey::from_rsa_components(
+        &jwt.as_ref().unwrap().n,
+        &jwt.as_ref().unwrap().e
+    ),
     &Validation::new(Algorithm::RS256),
 ) {
     Ok(v) => Some(v),
     Err(err) => match *err.kind() {
-        _ => return Box::pin(ready(Err(JwtAuthError::Unauthorised.into()))),
+        _ => return Box::pin(ready(Err(JwtAuthError::Unauthorized.into()))),
     },
 };
 ```
@@ -771,9 +776,14 @@ layout: default-3
 
 ## モニタリング（トレース）
 
-- Datadog agentが簡単そう
+- Datadog agentが簡単
+
+<v-click>
+
 - AWS XRayもやりたい
     - [rustのXRay SDK](https://github.com/awslabs/aws-sdk-rust/tree/main/sdk/xray)はα版
+
+</v-click>
 
 ## モニタリング（ログ）
 
