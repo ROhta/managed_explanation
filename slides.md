@@ -171,7 +171,7 @@ layout: section-2
 | <kbd>frontend</kbd> | SSRに対応 |
 | <kbd>backend</kbd> | DDD指向・オニオンアーキテクチャで実装<br/>リソースAPIではトークン検証処理を行う |
 | <kbd>CI/CD</kbd> | [aws謹製のGithub Actions](https://github.com/aws-actions)で実装 |
-| <kbd>認証・認可</kbd> | OIDCに則って各APIを構築 ・ [Organizations](https://auth0.com/docs/organizations)機能を使用（予定） |
+| <kbd>認証・認可</kbd> | OIDCに則って各APIを構築 ・ [Organizations](https://auth0.com/docs/organizations)機能（予定）|
 
 ---
 
@@ -303,27 +303,34 @@ src: ./slides/real_resources.md
 
 ---
 
-# 開発秘話
+# 開発秘話（firelens）
 
-firelens
+設定ファイルを管理したくない
 
 
-- 今回の場合では、設定ファイル無しでfirelensを使える
-    - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、タスク定義とは別にfluent bitの設定ファイルを用意する、という記事ばかりヒットする
-        - s3に配置する、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
-        - 管理コスト。。。
+- [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、タスク定義とは別にfluent bitの設定ファイルを用意する、という記事ばかりヒットする
+    - s3に配置する、設定ファイルをコンテナー内で読み込むようにDockerfileを編集する、等
+    - 管理コスト。。。
 
 <v-click>
 
 - ログ出力先が一ヶ所の場合のみ、タスク定義に記載したオプションを設定値としてfluent bitに渡せる
+    - 今回の場合では、設定ファイル無しでfirelensを使える
+
+</v-click>
+<v-click>
+
+- タスク全体でログ出力先を一ヶ所にまとめるのではない
+    - コンテナー毎に一ヶ所
+    - envoyのアクセスログはdatadog、アプリケーションログはcloudwatch logs、のような振分けが可能
 
 </v-click>
 
 ---
 
-# 開発秘話
+# 開発秘話（firelens）
 
-firelens
+DataAlreadyAcceptedExceptionエラー
 
 - log_routerコンテナー自体のログ（Cloudwatch Logs）にDataAlreadyAcceptedExceptionエラーが出力され続ける
     - `The given batch of log events has already been accepted. The next batch can be sent with sequenceToken`のメッセージが、ECSタスクがリクエストを受け付ける毎に記録される
@@ -333,7 +340,6 @@ firelens
         - [fluent bit公式](https://docs.fluentbit.io/manual/pipeline/outputs/cloudwatch)を参考に、タスク定義のlogConfigurationで`"Match": "*"` を設定した
         - Matchパラメーターが複数設定され、ログの二重送信をCloudWatch Logsが拒否した結果、DataAlreadyAcceptedExceptionエラーが発生していた
     - AWSサポートに問い合わせて、解決まで2か月かかった。。。
-
 
 ---
 src: ./slides/real_resources.md
@@ -469,7 +475,8 @@ http2対応できない
 
 <v-click>
 
-- actix webをtls暗号化せずにhttp2対応させる術が見つからず、app meshでのhttp2対応は諦めるという結論になった
+- actix webをtls暗号化せずにhttp2対応させる術が見つからず、app meshで仮想ノード間のhttp2対応は諦めるという結論になった
+- その後、クライアントと仮想ゲートウェイ間のhttp2化には成功した
 
 </v-click>
 
@@ -484,7 +491,7 @@ layout: default-5
 - 各ECSサービスはタスクに以下のコンテナーを持つ
     - log_router
     - envoy
-    - datadog agent（予定）
+    - datadog agent
     - app
 
 <v-click>
@@ -603,9 +610,9 @@ layout: default-3
 
 ## モニタリング（トレース）
 
-- AWS XRayを使いたかった
-    - rust用のXRay SDKがないので、トレース用データを送信できない。。。
-- Datadog agentでトレースする（予定）
+- Datadog agentが簡単そう
+- AWS XRayもやりたい
+    - [rustのXRay SDK](https://github.com/awslabs/aws-sdk-rust/tree/main/sdk/xray)はα版
 
 ## モニタリング（ログ）
 
