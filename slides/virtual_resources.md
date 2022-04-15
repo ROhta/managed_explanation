@@ -4,8 +4,8 @@ layout: default-3
 
 # 仮想リソース
 
-<div class="grid grid-cols-[75%,25%] gap-4">
-    <img src="/img/virtual_resources.svg" width="600">
+<div class="grid grid-cols-[72%,28%] gap-4">
+    <img src="/img/virtual_resources.svg" width="650">
     <div>
         <div><img src="/img/virtual_gateway.svg" width="50" class="inline-block"><p class="inline-block">仮想ゲートウェイ</p></div>
         <div><img src="/img/virtual_service.svg" width="50" class="inline-block"><p class="inline-block">仮想サービス</p></div>
