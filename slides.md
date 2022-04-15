@@ -737,19 +737,61 @@ src: ./slides/technology_stack_container_networks.md
 
 ## セキュリティ
 
+- AWS Shield
+- AWS WAF
+- AWS NetworkFirewall
+- AWS DNSFirewall
 - AWS Config
-- AWS Control Tower
-    - AWS Organizations
-    - AWS WAF
-    - AWS Shield
-    - AWS Firewall Manager
 - AWS Guard Duty
 - AWS Macie
+- AWS Security Hub
 - AWS KMSをきちんと管理
 - AWS IAMをきちんと管理
     - IAMグループに対してポリシー割当
     - パーミッションバウンダリ設定
 - [AWS BudgetsをChatbotでSlackに通知](https://dev.classmethod.jp/articles/aws-budgets-alert-by-aws-chatbot/)
+
+---
+
+# 使用技術（Dockerfile未満）
+
+## マルチアカウント管理
+
+- AWS ControlTower
+    - AWS Config
+    - AWS CloudTrail
+    - AWS Single Sign-On
+
+---
+
+# 使用技術（Dockerfile未満）
+
+## AWS Organizationsとの連携サービス
+
+<div class="grid grid-cols-[50%,50%] gap-4"><div>
+
+- セキュリティ系サービス
+    - Amazon Detective
+    - AWS Guard Duty
+    - AWS Health
+    - AWS Macie
+    - AWS Security Hub
+    - AWS Firewall Manager
+        - AWS WAF
+        - AWS Network Firewall
+        - AWS DNS Firewall
+
+</div><div>
+
+- 管理系サービス
+    - AWS Audit Manager
+    - AWS Compute Optimizer
+    - AWS Resource Access Manager
+    - Amazon VPC IP Address Manager
+    - S3 Storage Lens
+
+
+</div></div>
 
 ---
 src: ./slides/real_resources.md
@@ -808,6 +850,23 @@ Amazon Managed Service for Grafana
 # **Datadog頑張る**
 
 </v-click>
+
+---
+
+## その他
+
+- 開発環境のEC2からアクセス可能にする
+    - Transit Gatewayを設置
+- マルチAZ構成にする
+- AWS Well-Architected Toolも真面目にやる
+
+---
+layout: default-3
+---
+
+## 現状の構成
+
+<img src="/img/now.svg" width="900">
 
 ---
 layout: section-2
