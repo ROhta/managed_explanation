@@ -428,29 +428,8 @@ layout: section-2
 # 使用技術<br/>（Dockerfile未満）
 
 ---
-# 使用技術（Dockerfile未満）
-
-## コンテナー・ネットワーク
-
+src: ./slides/technology_stack_container_networks.md
 ---
-
-# 使用技術（Dockerfile未満）
-
-## コンテナー・ネットワーク
-
-- AWS ECS on Fargate
-    - キャパシティープロバイダー戦略を設定し、FARGATE_SPOTを最大限使用
-- AWS ECR
-    - イメージスキャン
-    - ライフサイクルポリシー設定
-- AWS Application Load Balancer
-- AWS Firelens
-- AWS Cloud Map
-- AWS Route53
-    - DNS SEC署名有効化
-- AWS App Mesh
-    - VPC内通信もTLS有効化
-
 ---
 src: ./slides/real_resources.md
 ---
@@ -460,11 +439,11 @@ src: ./slides/real_resources.md
 
 - リクエストの流れを追いやすい設計にする
     - 1つのリクエストに対して、全ノードのログを一ヶ所で見たい
-    - frontendのロググループを見て、次はbackendのログを見て、というログ設計はやめる
+    - frontendのロググループを開いて、次はbackendのロググループを開いて、というログ設計はやめる
 
 <v-click>
 
-## [firelens](https://dev.classmethod.jp/articles/aws-fargate-with-firelens-minimum/)
+### [firelens](https://dev.classmethod.jp/articles/aws-fargate-with-firelens-minimum/)
 
 - awsがマネージドサービス用にカスタマイズしたfluent bit
 - log_routerコンテナーをサイドカー構成でecsタスクに同梱し、任意の場所にログ送信
@@ -483,7 +462,7 @@ src: ./slides/real_resources.md
 
 
 - [ブログ](https://dev.classmethod.jp/articles/fargate-fiirelens-fluentbit/)を漁ると、タスク定義とは別にfluent bitの設定ファイルを用意する、という記事ばかりヒットする
-    - s3に配置、設定ファイルをコンテナー内で読み込むようDockerfileを編集、等
+    - s3に配置する、設定ファイルをコンテナー内で読み込むようDockerfileを編集する、等
     - 管理コスト。。。
 
 <v-click>
@@ -509,10 +488,10 @@ DataAlreadyAcceptedExceptionエラー
 - log_routerコンテナー自体のログ（Cloudwatch Logs）にDataAlreadyAcceptedExceptionエラーが出力され続ける
     - `The given batch of log events has already been accepted. The next batch can be sent with sequenceToken`のメッセージが、ECSタスクがリクエストを受け付ける毎に記録される
     - [Cloudwatch LogsのsequenceTokenは被っていなかった](https://michimani.net/post/use-cloudwatch-via-aws-cli/)
-    - 原因は、log_routerコンテナーのデフォルト値と自分で設定した値の競合だった
+    - 原因は、log_routerコンテナーの初期値と自分の設定値の競合だった
         - aws製fluent bitコンテナーは、[このような値](https://docs.aws.amazon.com/ja_jp/AmazonECS/latest/developerguide/firelens-taskdef.html)を無条件設定する
-        - [fluent bit公式](https://docs.fluentbit.io/manual/pipeline/outputs/cloudwatch)を参考に、タスク定義のlogConfigurationで`"Match": "*"` を設定した
-        - Matchパラメーターが複数設定され、ログの二重送信をCloudWatch Logsが拒否した結果、DataAlreadyAcceptedExceptionエラーが発生していた
+        - [fluent bit公式](https://docs.fluentbit.io/manual/pipeline/outputs/cloudwatch)を参考に、タスク定義の`"Match": "*"` をlogConfigurationに設定した
+        - Match対象が複数設定され、ログの二重送信をCloudWatch Logsが拒否した結果、DataAlreadyAcceptedExceptionエラーが発生していた
     - AWSサポートに問い合わせて、解決まで2か月かかった。。。
 
 ---
@@ -521,7 +500,6 @@ src: ./slides/real_resources.md
 ---
 src: ./slides/virtual_resources.md
 ---
-
 ---
 
 # サービスメッシュ
@@ -530,11 +508,24 @@ src: ./slides/virtual_resources.md
     - 選択肢はApp Mesh, Istio, Linkerdだった
     - Istioほどの機能は不要
     - とにかくメンテしたくない
+
+<v-click>
+
 - envoyコンテナーをサイドカー構成でecsタスクに同梱した
 - ingressアクセスをサービスメッシュで管理できるように、仮想ゲートウェイを構築した
+
+</v-click>
+<v-click>
+
 - EKS移行後にLinkerdを検討予定
     - [k8sが前提のツールなため](https://servicemesh.es)
     - [envoyじゃない](https://linkerd.io/2020/12/03/why-linkerd-doesnt-use-envoy/)メリデメを考える
+
+</v-click>
+
+---
+src: ./slides/virtual_resources.md
+---
 
 ---
 
@@ -550,17 +541,33 @@ src: ./slides/virtual_resources.md
 </v-click>
 <v-click>
 
-- 東京リージョンで自動設定されるイメージバージョンは`v1.19.1.0-prod`だったが、[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、1.15.0以上では環境変数`APPMESH_RESOURCE_ARN`が必要
-    - バージョン1.19.1のイメージに`APPMESH_VIRTUAL_NODE_NAME`を追加すると、挙動が不安定になった
-        - `APPMESH_VIRTUAL_NODE_NAME`と`APPMESH_RESOURCE_ARN`を両方追加すると、envoyからappへの通信がconnection errorとなった
+- マネコンで、東京リージョンで自動設定されるイメージバージョンは`v1.19.1.0-prod`だった
+    - だが、[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、バージョン1.15.0以上では環境変数`APPMESH_RESOURCE_ARN`が必要
+    - `APPMESH_VIRTUAL_NODE_NAME`は不要
+    - **マネコンが不要な環境変数を挿入してくる**
 
 </v-click>
+
+---
+
+# 開発秘話（App Mesh）
+
+マネコンで設定すると、誤ったデフォルト値が強制挿入される
+
+- バージョン1.19.1のイメージに`APPMESH_VIRTUAL_NODE_NAME`（不要な方）を追加すると、挙動が不安定になった
+    - `APPMESH_VIRTUAL_NODE_NAME`と`APPMESH_RESOURCE_ARN`を両方追加すると、envoyからappへの通信がconnection errorとなった
+    - **`APPMESH_VIRTUAL_NODE_NAME`のみを挿入する必要がある**
+
 <v-click>
 
 - さらに、App Mesh統合の有効化をチェックして、`APPMESH_VIRTUAL_NODE_NAME`を削除すると、エラーでタスク定義の保存に失敗する
-    - App Mesh統合の有効化のチェックを外したうえで、`APPMESH_RESOURCE_ARN`のみが追加されるように、タスク定義のJSONを手で書くしかなかった
+    - `APPMESH_RESOURCE_ARN`のみを追加するためには、App Mesh統合の有効化のチェックを外したうえで、タスク定義のJSONを手で書くしかなかった
 
 </v-click>
+
+---
+src: ./slides/virtual_resources.md
+---
 
 ---
 
@@ -570,7 +577,7 @@ src: ./slides/virtual_resources.md
 
 <div class="grid grid-cols-[47%,53%] gap-4"><div><v-click>
 
-- 原因は、appのヘルスチェックエンドポイントのステータスコードが200以外だったこと
+- 原因は、appのヘルスチェックエンドポイントのステータスコードが200ではなかったこと
 
 </v-click>
 <v-click>
@@ -599,12 +606,12 @@ src: ./slides/virtual_resources.md
 </v-click>
 <v-click>
 
-- タスクにつき1コンテナーの起動だったため、仮想ゲートウェイのenvoyコンテナーが停止してタスク数が0になる
+- タスク毎1コンテナーの起動だったため、仮想ゲートウェイのenvoyコンテナーが停止してタスク数が0になる
 
 </v-click>
 <v-click>
 
-- ECSサービスで最低タスク数を1と設定したため、新たなタスクが立ち上がる
+- ECSサービスで最小タスク数を1としていたため、新タスクが立ち上がる
 
 </v-click>
 </div></div>
@@ -626,15 +633,15 @@ http2対応できない
 <v-click>
 
 - actix webのAPI群への通信をhttp2にしたかったので、[公式](https://actix.rs/docs/http2/)にしたがってtls暗号化し、appをhttp2対応させた
-- が、`upstream connect error or disconnect/reset before headers. reset reason: connection termination`というenvoyのエラーが出力される
+- しかし、`upstream connect error or disconnect/reset before headers. reset reason: connection termination`というenvoyのエラーが出力される
 
 </v-click>
 <v-click>
 
 - awsサポート回答によると、↓とのこと
     - [http2は、tls必須ではない](https://qiita.com/kitauji/items/3bf03533895251c93af2#httpsh2-%E3%81%A8-httph2c)
-    - envoyへの通信とenvoy app間のプロトコルは一致させなければならない。envoyへはhttp2、envoy app間はhttp1.1というのはできない。
-    - envoy app間をtls暗号化すると、app meshのコントロールプレーンが通信を補足できない
+    - envoyへの通信とenvoy app間のプロトコルは一致させる必要がある。envoyへはhttp2、envoy app間はhttp1.1という設定はできない。
+    - が、envoy app間をtls暗号化すると、app meshのコントロールプレーンが通信を補足できない
     - appはtls暗号化せずhttp2対応しなくてはならない
 
 </v-click>
@@ -645,17 +652,21 @@ http2対応できない
 
 http2対応できない
 
-- [actix webの公式](https://actix.rs/docs/http2/)を見ても、tls暗号化せずにhttp2化する方法が見つからない。`actix-web automatically upgrades connections to HTTP/2 if possible.`と書いてはあるが、tls暗号化しないとactix webはhttp2にならなかった。
+- だが、[actix webの公式](https://actix.rs/docs/http2/)を見ても、tls暗号化せずにhttp2化する方法が見つからない。`actix-web automatically upgrades connections to HTTP/2 if possible.`と書いてはあるが、tls暗号化しないとactix webはhttp2にならなかった。
 
 <v-click>
 
-- actix webをtls暗号化せずにhttp2対応させる術が見つからず、app meshで仮想ノード間のhttp2対応は諦めるという結論になった
-    - その後、クライアントと仮想ゲートウェイ間のhttp2化には成功した
+- actix webをtls暗号化せずにhttp2対応させる術が見つからず、app meshで仮想ノード間や仮想ゲートウェイ・仮想ノード間のhttp2対応は諦める、という結論になった
+    - その後、クライアント・仮想ゲートウェイ間のhttp2化には成功した
 
 </v-click>
 
 ---
 src: ./slides/virtual_resources.md
+---
+---
+src: ./slides/real_resources.md
+---
 ---
 layout: default-5
 ---
@@ -666,6 +677,7 @@ layout: default-5
     - log_router
     - envoy
     - datadog agent
+    - xray_daemon
     - app
 
 <v-click>
@@ -705,41 +717,23 @@ layout: section-2
 - マイクロサービスの開発・運用を効率化する
     - 冪等性の考慮
         - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンの実装が不要なアーキテクチャを考える
-    - アプリケーションでの処理をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外の処理はなるべくインフラで実装する
-        - ログ振分け・サーキットブレイカー等
+    - アプリケーションでの処理をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外の処理はなるべくAWSのマネージドサービスで行う
+        - ログ振分け・サーキットブレイカー・セキュリティ対策等
 
 <v-click>
 
 - **セキュリティ最重視**
-    - **WAF**
+    - **各種ファイアウォール**
     - **AWSアカウント自体の管理**
 
 </v-click>
 
-
+---
+src: ./slides/technology_stack_container_networks.md
+---
 ---
 
 # 使用技術（Dockerfile未満）
-
-<div class="grid grid-cols-[50%,50%] gap-4"><div>
-
-## コンテナー・ネットワーク
-
-- AWS ECS on Fargate
-    - キャパシティープロバイダー戦略を設定し、FARGATE_SPOTを最大限使用
-- AWS ECR
-    - イメージスキャン
-    - ライフサイクルポリシー設定
-- AWS Application Load Balancer
-- AWS Firelens
-- AWS Cloud Map
-- AWS Route53
-    - DNS SEC署名有効化
-- AWS App Mesh
-    - VPC内通信もTLS有効化
-
-</div>
-<v-click><div>
 
 ## セキュリティ
 
@@ -756,9 +750,6 @@ layout: section-2
     - IAMグループに対してポリシー割当
     - パーミッションバウンダリ設定
 - [AWS BudgetsをChatbotでSlackに通知](https://dev.classmethod.jp/articles/aws-budgets-alert-by-aws-chatbot/)
-
-</div></v-click>
-</div>
 
 ---
 src: ./slides/real_resources.md
