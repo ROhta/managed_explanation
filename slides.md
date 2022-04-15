@@ -195,7 +195,7 @@ rustの型制約が激しい
 <v-click>
 
 - とはいえ、型制約が激しくてビルドが通らない。。。
-    - MySQLのテーブルでbool値を格納するカラムがtinyint(1)で作成されていた
+    - MySQLのテーブルでbool値のカラムの型は、tinyint(1)となる
     - が、Rust側でintを指定すると、ビルドエラー
 
 </v-click>
@@ -512,7 +512,7 @@ src: ./slides/virtual_resources.md
 <v-click>
 
 - envoyコンテナーをサイドカー構成でecsタスクに同梱した
-- ingressアクセスをサービスメッシュで管理できるように、仮想ゲートウェイを構築した
+- ingressアクセスをサービスメッシュで管理できるよう、仮想ゲートウェイを構築した
 
 </v-click>
 <v-click>
@@ -667,8 +667,6 @@ src: ./slides/virtual_resources.md
 ---
 src: ./slides/real_resources.md
 ---
----
-layout: default-5
 ---
 
 # ECSタスク
