@@ -15,14 +15,14 @@
     "export": "slidev export"
   },
   "dependencies": {
-    "@slidev/cli": "^0.30.2",
+    "@slidev/cli": "^0.34.2",
     "@slidev/theme-shibainu": "^0.0.2",
-    "playwright-chromium": "^1.21.0"
+    "playwright-chromium": "^1.23.1"
   },
   "devDependencies": {
-    "@iconify-json/bi": "^1.1.1",
-    "@iconify-json/typcn": "^1.1.1",
-    "@iconify-json/uim": "^1.1.1",
-    "@iconify-json/whh": "^1.1.1"
+    "@iconify-json/bi": "^1.1.4",
+    "@iconify-json/typcn": "^1.1.2",
+    "@iconify-json/uim": "^1.1.2",
+    "@iconify-json/whh": "^1.1.2"
   }
 }
