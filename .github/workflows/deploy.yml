@@ -4,10 +4,6 @@ on:
     types: [opened, reopened, ready_for_review]
     branches:
       - main
-  push:
-    branches:
-      - modules
-
 jobs:
   deploy:
     environment:
