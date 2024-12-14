@@ -1,0 +1,1 @@
+const a="/managed_explanation/img/virtual_resources.svg",s="/managed_explanation/img/virtual_gateway.svg",t="/managed_explanation/img/virtual_service.svg",i="/managed_explanation/img/virtual_router.svg",n="/managed_explanation/img/virtual_node.svg";export{a as _,s as a,t as b,i as c,n as d};
