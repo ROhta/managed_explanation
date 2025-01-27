@@ -62,28 +62,12 @@ layout: section-2
 
 </v-click>
 ---
-
-# サ－ビス概要
-
-非機能要件
-
-- 別VPCのRDSを操作する
-- 認証・認可 <bi-arrow-right-square-fill /> OIDC
-    - 製品アクセスの有無により、ユーザプールを分割する
-- マイクロサービスの開発・運用を効率化する
-    - 冪等性の考慮
-        - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンの実装が不要なアーキテクチャを考える
-    - アプリケーションでの処理をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外の処理はなるべくAWSのマネージドサービスで行う
-        - ログ振分け・サーキットブレイカー・セキュリティ対策等
-- セキュリティ最重視
-    - 各種ファイアウォール
-    - AWSアカウント自体の管理
-
+src: ./slides/service_requirements.md
+---
 ---
 layout: section-2
 ---
 # 開発の進め方
-
 ---
 
 # [GitHub Beta Projects](https://github.com/features/issues/)で管理
@@ -136,7 +120,7 @@ Discussions <bi-arrow-right-square-fill /> Issues <bi-arrow-right-square-fill />
 
 # [GitHub Beta Projects](https://github.com/features/issues/)で管理
 
-<div class="grid grid-cols-[35%,65%] gap-4">
+<div class="grid grid-cols-2 gap-1">
     <div>
         <p>JIRAのように扱うため、<br/>labelsで機能補完</p>
         <p>closed, blocked by等、<br/>チケット間の関係性を表現</p>
@@ -531,20 +515,19 @@ src: ./slides/virtual_resources.md
 
 # 開発秘話（App Mesh）
 
-マネコンで設定すると、誤ったデフォルト値が強制挿入される
+マネコンで設定すると、誤ったデフォルト環境変数が強制挿入される
 
 <v-click>
 
 - AWSマネジメントコンソールでタスク定義を作成する際、App Mesh統合の有効化にチェックを入れると、App Meshで用いるenvoyイメージや必要な設定が自動挿入される
-    - envoyコンテナーに環境変数`APPMESH_VIRTUAL_NODE_NAME`が挿入される
+    - envoyコンテナーに環境変数`APPMESH_VIRTUAL_NODE_NAME`が強制挿入
 
 </v-click>
 <v-click>
 
-- マネコンで、東京リージョンで自動設定されるイメージバージョンは`v1.19.1.0-prod`だった
-    - だが、[公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、バージョン1.15.0以上では環境変数`APPMESH_RESOURCE_ARN`が必要
-    - `APPMESH_VIRTUAL_NODE_NAME`は不要
-    - **マネコンが不要な環境変数を挿入してくる**
+- [公式](https://docs.aws.amazon.com/ja_jp/app-mesh/latest/userguide/envoy-config.html)によると、バージョン1.15.0以上では必要な環境変数は`APPMESH_RESOURCE_ARN`に変更されていた
+    - だがマネコンで、東京リージョンで自動設定されるイメージバージョンは`v1.19.1.0-prod`だった
+    - `APPMESH_VIRTUAL_NODE_NAME`は不要なのに、**マネコンが強制挿入してくる**
 
 </v-click>
 
@@ -552,7 +535,7 @@ src: ./slides/virtual_resources.md
 
 # 開発秘話（App Mesh）
 
-マネコンで設定すると、誤ったデフォルト値が強制挿入される
+マネコンで設定すると、誤ったデフォルト環境変数が強制挿入される
 
 - バージョン1.19.1のイメージに`APPMESH_VIRTUAL_NODE_NAME`（不要な方）を追加すると、挙動が不安定になった
     - `APPMESH_VIRTUAL_NODE_NAME`と`APPMESH_RESOURCE_ARN`を両方追加すると、envoyからappへの通信がconnection errorとなった
@@ -575,7 +558,7 @@ src: ./slides/virtual_resources.md
 
 朝見てみたら、仮想ゲートウェイの起動失敗タスクが500以上。。。。。
 
-<div class="grid grid-cols-[47%,53%] gap-4"><div><v-click>
+<div class="grid grid-cols-2 gap-1"><div><v-click>
 
 - 原因は、appのヘルスチェックエンドポイントのステータスコードが200ではなかったこと
 
@@ -596,7 +579,7 @@ src: ./slides/virtual_resources.md
 </div>
 <div><v-click>
 
-- mesh内通信でステータスコードは書き換えられない <br/><typcn-equals /> ターゲットグループの受け取るステータスコードはappのもの
+- mesh内通信でステータスコードは書き換えられない、つまりターゲットグループの受け取るステータスコードはappのもの
 
 </v-click>
 <v-click>
@@ -606,12 +589,12 @@ src: ./slides/virtual_resources.md
 </v-click>
 <v-click>
 
-- タスク毎1コンテナーの起動だったため、仮想ゲートウェイのenvoyコンテナーが停止してタスク数が0になる
+- タスク毎1コンテナーの起動のため、仮想ゲートウェイのenvoyコンテナーが停止しタスク数は0になる
 
 </v-click>
 <v-click>
 
-- ECSサービスで最小タスク数を1としていたため、新タスクが立ち上がる
+- 仮想ゲートウェイの新タスク起動
 
 </v-click>
 </div></div>
@@ -694,9 +677,9 @@ src: ./slides/real_resources.md
 layout: section-2
 ---
 
-<div class="grid grid-cols-[25%,75%] gap-3">
+<div class="grid grid-cols-2 gap-3">
 
-# 使用技術<br/>（Dockerfile未満）
+## 使用技術<br/>（Dockerfile未満）
 
 <v-click>
 <img src="/img/madaaruyo.png" width="700">
@@ -704,31 +687,10 @@ layout: section-2
 </div>
 
 ---
-
-# サ－ビス概要
-
-非機能要件
-
-- 別VPCのRDSを操作する
-- 認証・認可 <bi-arrow-right-square-fill /> OIDC
-    - 製品アクセスの有無により、ユーザプールを分割する
-- マイクロサービスの開発・運用を効率化する
-    - 冪等性の考慮
-        - 分散トランザクション管理をなるべくやらない <bi-arrow-right-square-fill /> Sagaパターンの実装が不要なアーキテクチャを考える
-    - アプリケーションでの処理をビジネスロジックに集中させる <typcn-equals /> ビジネスロジック以外の処理はなるべくAWSのマネージドサービスで行う
-        - ログ振分け・サーキットブレイカー・セキュリティ対策等
-
-<v-click>
-
-- **セキュリティ最重視**
-    - **各種ファイアウォール**
-    - **AWSアカウント自体の管理**
-
-</v-click>
-
+src: ./slides/service_requirements.md
+---
 ---
 src: ./slides/technology_stack_container_networks.md
----
 ---
 
 # 使用技術（Dockerfile未満）
@@ -766,7 +728,7 @@ src: ./slides/technology_stack_container_networks.md
 
 ## AWS Organizationsとの連携サービス
 
-<div class="grid grid-cols-[50%,50%] gap-4"><div>
+<div class="grid grid-cols-2 gap-1"><div>
 
 - セキュリティ系サービス
     - Amazon Detective
@@ -794,7 +756,6 @@ src: ./slides/technology_stack_container_networks.md
 ---
 src: ./slides/real_resources.md
 ---
-
 ---
 layout: default-3
 ---
