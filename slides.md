@@ -1,7 +1,7 @@
 ---
 theme: shibainu
 class: 'text-center'
-highlighter: prism
+highlighter: shiki
 lineNumbers: true
 info: |
     # ユーザ管理画面開発
@@ -694,7 +694,7 @@ src: ./slides/real_resources.md
 layout: section-2
 ---
 
-<div class="grid grid-cols-[65%,35%] gap-4">
+<div class="grid grid-cols-[25%,75%] gap-3">
 
 # 使用技術<br/>（Dockerfile未満）
 
@@ -856,7 +856,7 @@ Amazon Managed Service for Grafana
 - 開発環境のEC2からアクセス可能にする
     - Transit Gatewayを設置
 - マルチAZ構成にする
-- AWS Well-Architected Toolも真面目にやる
+- AWS Well-Architected Toolもまじめにやる
 
 ---
 layout: default-3
