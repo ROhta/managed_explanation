@@ -785,17 +785,27 @@ layout: default-3
 
 </v-click>
 
+<v-click>
+
 ## モニタリング（ログ）
 
 firelensでどこにでも出せる
+
+</v-click>
+<v-click>
 
 ```markdown {1|2}
 AWS Cloudwatch Logs
 Datadog
 ```
 
+</v-click>
+<v-click>
 
 ## モニタリング（メトリクス）
+
+</v-click>
+<v-click>
 
 ```markdown {1|2|3-4|1}
 Datadog
@@ -804,6 +814,7 @@ Amazon Managed Service for Prometheus
 Amazon Managed Service for Grafana
 ```
 
+</v-click>
 <v-click>
 
 # **Datadog頑張る**
@@ -837,7 +848,7 @@ layout: section-2
 
 # 今後
 
-<div class="grid grid-cols-[50%,50%] gap-4"><div>
+<div class="grid grid-cols-2 gap-1"><div>
 
 ## システム面
 
@@ -885,7 +896,7 @@ layout: default-7
 
 #
 
-<div class="grid grid-cols-[50%,50%] gap-4">
+<div class="grid grid-cols-2 gap-1">
 <img src="/img/tegatarinai.jpg">
 <v-click><img src="/img/yoroshiku.jpg" width="380"></v-click>
 </div>
