@@ -1,18 +1,18 @@
-// Slidev v52 の slide-import-guard は <img src="/img/..."> を
-// @vitejs/plugin-vue が生成する `import _imports_0 from '/img/...'`
-// として検証し、ファイルシステム絶対パスとして解釈してエラーにする。
-// includeAbsolute: false で絶対パスを import 文に変換させず、
-// public/ 配下の静的ファイルとして配信させて回避する。
+// Slidev v52 で導入された slide-import-guard プラグインが、
+// <img src="/img/..."> から @vitejs/plugin-vue が生成する
+// `import _imports_0 from '/img/...'` をファイルシステム絶対パスとして
+// 検証し、`server.fs.allow` 外と判定してエラーにする問題への dev 限定回避策。
 //
-// vite を direct dependency にしていないため defineConfig は使わず plain object で記述。
+// 該当ガード: @slidev/cli の `node/vite/importGuard.ts`
+//   if (!isSlideMarkdownId(id) || !config?.server.fs.strict) return null;
+// → server.fs.strict: false で guard が早期 return し検証スキップされる。
+//
+// build には server.fs.* は影響せず、`<img src="/img/...">` は通常通り
+// import 変換 → base prefix 付与の流れで GitHub Pages のサブパス配信に追従する。
 export default {
-  slidev: {
-    vue: {
-      template: {
-        transformAssetUrls: {
-          includeAbsolute: false,
-        },
-      },
+  server: {
+    fs: {
+      strict: false,
     },
   },
 }
