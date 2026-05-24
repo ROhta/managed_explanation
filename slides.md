@@ -792,20 +792,20 @@ layout: default-3
 firelensでどこにでも出せる
 
 </v-click>
-<v-click>
+<div v-click>
 
 ```markdown {1|2}
 AWS Cloudwatch Logs
 Datadog
 ```
 
-</v-click>
+</div>
 <v-click>
 
 ## モニタリング（メトリクス）
 
 </v-click>
-<v-click>
+<div v-click>
 
 ```markdown {1|2|3-4|1}
 Datadog
@@ -814,7 +814,7 @@ Amazon Managed Service for Prometheus
 Amazon Managed Service for Grafana
 ```
 
-</v-click>
+</div>
 <v-click>
 
 # **Datadog頑張る**
