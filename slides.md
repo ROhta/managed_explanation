@@ -677,14 +677,11 @@ src: ./slides/real_resources.md
 layout: section-2
 ---
 
-<div class="grid grid-cols-2 gap-3">
-
-## 使用技術<br/>（Dockerfile未満）
+# 使用技術<br/>（Dockerfile未満）
 
 <v-click>
-<img src="/img/madaaruyo.png" width="700">
+<img src="/img/madaaruyo.png" width="700" class="absolute right-10 top-1/2 -translate-y-1/2 !w-[40%]">
 </v-click>
-</div>
 
 ---
 src: ./slides/service_requirements.md
