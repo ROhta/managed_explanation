@@ -15,9 +15,9 @@
     "export": "slidev export"
   },
   "dependencies": {
-    "@slidev/cli": "^52.15.2",
+    "@slidev/cli": "^53.0.0",
     "@slidev/theme-shibainu": "^0.25.0",
-    "playwright-chromium": "^1.60.0"
+    "playwright-chromium": "^1.64.1"
   },
   "devDependencies": {
     "@iconify-json/bi": "^1.2.7",
